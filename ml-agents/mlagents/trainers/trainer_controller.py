@@ -286,7 +286,11 @@ class TrainerController(object):
 
         tf.reset_default_graph()
 
-        with tf.Session() as sess:
+        config = tf.ConfigProto(
+            # device_count = {'GPU': 0} # will disable using GPU
+            )
+        config.gpu_options.allow_growth = True # enable concurrent training with GPU
+        with tf.Session(config=config) as sess: 
             self._initialize_trainers(trainer_config, sess)
             for _, t in self.trainers.items():
                 self.logger.info(t)

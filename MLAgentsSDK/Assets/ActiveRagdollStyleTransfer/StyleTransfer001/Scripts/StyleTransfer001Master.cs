@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using MLAgents;
 
 public class StyleTransfer001Master : MonoBehaviour {
 
@@ -38,6 +39,7 @@ public class StyleTransfer001Master : MonoBehaviour {
 	// public List<float> vector;
 
 	private StyleTransfer001Animator _muscleAnimator;
+	private Brain _brain;
 	bool _phaseIsRunning;
 	Random _random = new Random();
 	Vector3 _lastCenterOfMass;
@@ -86,6 +88,7 @@ public class StyleTransfer001Master : MonoBehaviour {
 			Muscles.Add(muscle);			
 		}
 		_muscleAnimator = FindObjectOfType<StyleTransfer001Animator>();
+		_brain = FindObjectOfType<Brain>();
 	}
 	
 	// Update is called once per frame
@@ -222,8 +225,9 @@ public class StyleTransfer001Master : MonoBehaviour {
 		// ErrorCutoff = UnityEngine.Random.Range(-15f, 2f);
 		// ErrorCutoff = UnityEngine.Random.Range(-10f, 1f);
 		// ErrorCutoff = UnityEngine.Random.Range(-5f, 1f);
-		// ErrorCutoff = UnityEngine.Random.Range(-3f, .5f);
-		ErrorCutoff = UnityEngine.Random.Range(-3f, -3f);
+		ErrorCutoff = UnityEngine.Random.Range(-3f, .5f);
+		if (_brain.brainType == BrainType.Internal)
+			ErrorCutoff = UnityEngine.Random.Range(-3f, -3f);
 		var lastLenght = AnimationIndex - EpisodeAnimationIndex;
 		if (lastLenght >=  _muscleAnimator.AnimationSteps.Count-2){
 			StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
