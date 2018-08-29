@@ -10,6 +10,7 @@ Research into Assault Course for training Active Ragdolls (using ml_agents+)
 
 
 ## StyleTransfer001
+![StyleTransfer001](images/StyleTransfer001.98b-10m.gif)
 * **Model:** U_Character_REFAvatar
 * **Animation:** HumanoidWalk
 * **Hypostheis:** Implement basic style transfer from mo-cap
