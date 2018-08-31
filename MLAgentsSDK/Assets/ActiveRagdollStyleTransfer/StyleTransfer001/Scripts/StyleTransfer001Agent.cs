@@ -79,17 +79,20 @@ public class StyleTransfer001Agent : Agent {
 		float endEffectorRewardScale = .15f;
 		float centerMassRewardScale = .1f;
 
-		float reward = 
-			- jointsAtLimitPenality +
-			// - effortPenality +
+		float distanceReward = 
 			(poseReward * poseRewardScale) +
 			(velocityReward * velocityRewardScale) +
 			(endEffectorReward * endEffectorRewardScale) +
 			(centerMassReward * centerMassRewardScale);
+		float reward = 
+			distanceReward
+			// - effortPenality +
+			- jointsAtLimitPenality;
 
         if (ShowMonitor) {
             var hist = new []{
                 reward,
+				distanceReward,
                 - jointsAtLimitPenality, 
                 // - effortPenality, 
 				(poseReward * poseRewardScale),
@@ -103,8 +106,7 @@ public class StyleTransfer001Agent : Agent {
 		if (!_master.IgnorRewardUntilObservation)
 			AddReward(reward);
 		if (!IsDone()){
-			if (reward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
-			// if (reward < 0f && !_master.DebugShowWithOffset) {
+			if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
 				AddReward(-1f);
 				Done();
 				// _master.StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
@@ -114,8 +116,7 @@ public class StyleTransfer001Agent : Agent {
 			if (_master.IsDone()){
 				// AddReward(1f*(float)this.GetStepCount());
 				Done();
-				//if (_master.StartAnimationIndex > 0 && reward >= 0f)
-				if (_master.StartAnimationIndex > 0 && reward >= _master.ErrorCutoff)
+				if (_master.StartAnimationIndex > 0 && distanceReward >= _master.ErrorCutoff)
 				 	_master.StartAnimationIndex--;
 			}
 		}
