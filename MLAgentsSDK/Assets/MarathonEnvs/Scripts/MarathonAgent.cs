@@ -6,7 +6,7 @@ using MLAgents;
 
 namespace MLAgents
 {
-    public class MarathonAgent : Agent
+    public class MarathonAgent : Agent, IOnTerrainCollision, IOnSensorCollision
     {
         //
         // Params for prefabs
@@ -584,7 +584,7 @@ namespace MLAgents
             }
         }
 
-        public void SensorCollisionEnter(Collider sensorCollider, Collision other) {
+        public void OnSensorCollisionEnter(Collider sensorCollider, Collision other) {
 			if (string.Compare(other.gameObject.name, "Terrain", true) !=0)
                 return;
 			var otherGameobject = other.gameObject;
@@ -595,7 +595,7 @@ namespace MLAgents
                 SensorIsInTouch[idx] = 1f;
             }
 		}
-        public void SensorCollisionExit(Collider sensorCollider, Collision other)
+        public void OnSensorCollisionExit(Collider sensorCollider, Collision other)
         {
             if (string.Compare(other.gameObject.name, "Terrain", true) !=0)
                 return;
