@@ -148,7 +148,7 @@ public class Muscle001
                 throw new System.NotImplementedException();
                 break;
         }
-        //MaximumForce = MaximumForce * 0.5f;
+        // MaximumForce = MaximumForce * 1f;
         _firstRunComplete = false;
         Rigidbody.angularVelocity = Vector3.zero;
         Rigidbody.velocity = Vector3.zero;
