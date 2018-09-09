@@ -20,6 +20,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 	private List<Vector3> _lastPosition;
 	private List<Quaternion> _lastRotation;
 	// public string animName = "0008_Skipping002";
+	private bool _isRagDoll;
 
 	Quaternion _initialBaseRotation;
 	List<Quaternion> _initialRotations;
@@ -73,7 +74,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		_initialRotations = _animBones
 			.Select(x=> x.rotation)
 			.ToList();
-
+		BecomeAnimated();
 	}
 	
 	void FixedUpdate () {
@@ -94,6 +95,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 			return;
 		}
 		if (NormalizedTime <= endTime) {
+			MimicAnimation();
 			UpdateAnimationStep(timeStep);
 		}
 		else {
@@ -154,13 +156,25 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		}
 		AnimationSteps.Add(animStep);
     }
+	public void BecomeAnimated()
+	{
+		var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
+		foreach (var rb in rigidbodies)
+		{
+			rb.isKinematic = true;
+		}
+		_isRagDoll = false;
+	}
 	public void BecomeRagDoll()
 	{
 		var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
 		foreach (var rb in rigidbodies)
 		{
 			rb.isKinematic = false;
+			// rb.angularVelocity = Vector3.zero;
+			// rb.velocity = Vector3.zero;
 		}
+		_isRagDoll = true;
 	}
 	public void StopAnimation()
 	{
@@ -168,12 +182,14 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		anim.enabled=false;
 	}
 	protected virtual void LateUpdate() {
-
 		MimicAnimation();
 	}
 
 	public void MimicAnimation()
 	{
+		if (!anim.enabled)
+			return;
+
         // MimicBone("butt", "mixamorig:Hips", new Vector3(.01f, -.057f, .004f), Quaternion.Euler(90, 88.2f, 88.8f));
         // MimicBone("butt", 			"mixamorig:Hips", 			new Vector3(.0f, .0f, .0f), 			Quaternion.Euler(90, 88.2f, 88.8f));
         MimicBone("butt", 			"mixamorig:Hips", 			new Vector3(.0f, -.055f, .0f), 			Quaternion.Euler(90, 0f, 0f));
@@ -181,27 +197,31 @@ public class StyleTransfer002Animator : MonoBehaviour {
         MimicBone("upper_waist",    "mixamorig:Spine1",         new Vector3(.0f, .0465f, .0f), 			Quaternion.Euler(90, 0f, 0f));
         MimicBone("torso",          "mixamorig:Spine2",         new Vector3(.0f, .04f, .0f), 			Quaternion.Euler(90, 0f, 0f));
 		//Quaternion.Euler(90, -90f, 180f));
-        MimicBone("head",           "mixamorig:Head",           new Vector3(.0f, .05f, .0f), 			Quaternion.Euler(90, -90f, 180f));
+        MimicBone("head",           "mixamorig:Head",           new Vector3(.0f, .05f, .0f), 			Quaternion.Euler(0, 0f, 0f));
 
-        MimicBone("left_upper_arm",   "mixamorig:LeftArm", "mixamorig:LeftForeArm", new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 0, 180));
-        MimicBone("left_larm",        "mixamorig:LeftForeArm",  "mixamorig:LeftHand", new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 0, 180));
-        MimicBone("left_hand",        "mixamorig:LeftHand", new Vector3(.0f, .0f, .0f), 			Quaternion.Euler(0, 0, 0));
+        MimicBone("left_upper_arm",   "mixamorig:LeftArm", "mixamorig:LeftForeArm", new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 45, 180));
+        MimicBone("left_larm",        "mixamorig:LeftForeArm",  "mixamorig:LeftHand", new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, -180, 180));
+        MimicBone("left_hand",        "mixamorig:LeftHand", new Vector3(.0f, .0f, .0f), 			Quaternion.Euler(0, 90, 90+180));
         
-        MimicBone("right_upper_arm",  "mixamorig:RightArm", "mixamorig:RightForeArm",      new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 0, 180));
-        MimicBone("right_larm",       "mixamorig:RightForeArm", "mixamorig:RightHand",  new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 0, 180));
-        MimicBone("right_hand",       "mixamorig:RightHand",      new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 0, 0));
+        MimicBone("right_upper_arm",  "mixamorig:RightArm", "mixamorig:RightForeArm",      new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 180, 180));
+        MimicBone("right_larm",       "mixamorig:RightForeArm", "mixamorig:RightHand",  new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 90, 180));
+        MimicBone("right_hand",       "mixamorig:RightHand",      new Vector3(.0f, .0f, .0f), Quaternion.Euler(0, 180-90, -90));
 
         MimicBone("left_thigh",       "mixamorig:LeftUpLeg",  "mixamorig:LeftLeg",    new Vector3(.0f, .0f, .0f), 			Quaternion.Euler(0, 0, 180));
-        MimicBone("left_shin",        "mixamorig:LeftLeg",    "mixamorig:LeftFoot",   new Vector3(.0f, .0f, .0f), 			Quaternion.Euler(0, 0, 180));
-        // MimicBone("left_left_foot",   "mixamorig:LeftToeBase",    new Vector3(-.024f, -.0622f, .0326f),   Quaternion.Euler(-8, -90, 180));//3));
-        // MimicBone("right_left_foot",  "mixamorig:LeftToeBase",    new Vector3(.019f, -.061f, .03f),       Quaternion.Euler(-8, -90, 180));//-8));
-        MimicBone("left_left_foot",   "mixamorig:LeftToeBase",    new Vector3(.024f, .044f, -.06f), 			Quaternion.Euler(3, -90, 180));//3));
-        MimicBone("right_left_foot",  "mixamorig:LeftToeBase",    new Vector3(-.024f, .044f, -.06f),  			Quaternion.Euler(-8, -90, 180));//-8));
+        MimicBone("left_shin",        "mixamorig:LeftLeg",    "mixamorig:LeftFoot",   new Vector3(.0f, .02f, .0f), 			Quaternion.Euler(0, 0, 180));
+        // MimicBone("left_left_foot",   "mixamorig:LeftToeBase",    new Vector3(.024f, .044f, -.06f), 			Quaternion.Euler(3, -90, 180));//3));
+        // MimicBone("right_left_foot",  "mixamorig:LeftToeBase",    new Vector3(-.024f, .044f, -.06f),  			Quaternion.Euler(-8, -90, 180));//-8));
+        MimicLeftFoot("left_left_foot",   new Vector3(.024f, -.01215f, -.06f), 			Quaternion.Euler(3, -90, 180));//3));
+        MimicLeftFoot("right_left_foot",  new Vector3(-.024f, -.01215f, -.06f),  			Quaternion.Euler(-8, -90, 180));//-8));
 
         MimicBone("right_thigh",      "mixamorig:RightUpLeg", "mixamorig:RightLeg", new Vector3(.0f, .0f, .0f), 			Quaternion.Euler(0, 0, 180));
-        MimicBone("right_shin",       "mixamorig:RightLeg",   "mixamorig:RightFoot", new Vector3(.0f, .0f, .0f), 			Quaternion.Euler(0, 0, 180));
-        MimicBone("right_right_foot", "mixamorig:RightToeBase",   new Vector3(.024f, .044f, -.06f),  			Quaternion.Euler(3, -90, 180));//3));
-        MimicBone("left_right_foot",  "mixamorig:RightToeBase",   new Vector3(-.024f, .044f, -.06f), 		Quaternion.Euler(-8, -90, 180));//-8));
+        MimicBone("right_shin",       "mixamorig:RightLeg",   "mixamorig:RightFoot", new Vector3(.0f, .02f, .0f), 			Quaternion.Euler(0, 0, 180));
+        // MimicBone("right_right_foot", "mixamorig:RightToeBase",   new Vector3(.024f, .044f, -.06f),  			Quaternion.Euler(3, -90, 180));//3));
+        // MimicBone("left_right_foot",  "mixamorig:RightToeBase",   new Vector3(-.024f, .044f, -.06f), 		Quaternion.Euler(-8, -90, 180));//-8));
+        // MimicRightFoot("right_right_foot", new Vector3(.024f, .044f, -.06f),  			Quaternion.Euler(3, -90, 180));//3));
+        // MimicRightFoot("left_right_foot",  new Vector3(-.024f, .044f, -.06f), 		Quaternion.Euler(-8, -90, 180));//-8));
+        MimicRightFoot("right_right_foot", new Vector3(.024f, -.01215f, -.06f),  			Quaternion.Euler(3, -90, 180));//3));
+        MimicRightFoot("left_right_foot",  new Vector3(-.024f, -.01215f, -.06f), 		Quaternion.Euler(-8, -90, 180));//-8));
 
 	}
 	void MimicBone(string name, string animBoneName, Vector3 offset, Quaternion rotationOffset)
@@ -225,8 +245,40 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		var animEndBone = transforms.First(x=>x.name == animEndtName);
 		var target = rigidbodies.First(x=>x.name == name);
 
-		var pos = (animEndBone.transform.position - animStartBone.transform.position) + offset;
-		target.transform.position = animStartBone.transform.position + (pos/2);
+		var pos = (animEndBone.transform.position - animStartBone.transform.position);
+		target.transform.position = animStartBone.transform.position + (pos/2) + offset;
 		target.transform.rotation = animStartBone.transform.rotation * rotationOffset;
+	}
+	void MimicLeftFoot(string name, Vector3 offset, Quaternion rotationOffset)
+	{
+		string animStartName = "mixamorig:LeftFoot";
+		string animEndtName = "mixamorig:LeftToeBase";
+		var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
+		var transforms = GetComponentsInChildren<Transform>().ToList();
+
+		var animStartBone = transforms.First(x=>x.name == animStartName);
+		var animEndBone = transforms.First(x=>x.name == animEndtName);
+		var target = rigidbodies.First(x=>x.name == name);
+
+		var rotation = Quaternion.Lerp(animStartBone.rotation, animEndBone.rotation, 0.8f);
+		var pos = (animEndBone.transform.position - animStartBone.transform.position);
+		target.transform.position = animStartBone.transform.position + (pos/2) + offset;
+		target.transform.rotation = rotation * rotationOffset;
+	}
+	void MimicRightFoot(string name, Vector3 offset, Quaternion rotationOffset)
+	{
+		string animStartName = "mixamorig:RightFoot";
+		string animEndtName = "mixamorig:RightToeBase";
+		var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
+		var transforms = GetComponentsInChildren<Transform>().ToList();
+
+		var animStartBone = transforms.First(x=>x.name == animStartName);
+		var animEndBone = transforms.First(x=>x.name == animEndtName);
+		var target = rigidbodies.First(x=>x.name == name);
+
+		var rotation = Quaternion.Lerp(animStartBone.rotation, animEndBone.rotation, 0.8f);
+		var pos = (animEndBone.transform.position - animStartBone.transform.position);
+		target.transform.position = animStartBone.transform.position + (pos/2) + offset;
+		target.transform.rotation = rotation * rotationOffset;
 	}
 }

@@ -26,6 +26,11 @@ public class RagDoll002 : MonoBehaviour {
         IgnoreCollision("left_shin", new []{"left_thigh"});
         IgnoreCollision("right_shin", new []{"right_thigh"});
 
+        IgnoreCollision("right_right_foot", new []{"left_right_foot"});
+        IgnoreCollision("right_shin", new []{"left_right_foot", "right_right_foot"});
+        IgnoreCollision("right_left_foot", new []{"left_left_foot"});
+        IgnoreCollision("left_shin", new []{"left_left_foot", "right_left_foot"});
+
 	}
 	void IgnoreCollision(string first, string[] seconds)
     {
