@@ -75,30 +75,30 @@ public class CopyRagDoll : MonoBehaviour {
         _sources = ragDollSource.GetComponentsInChildren<Transform>().ToList();
         _targets = GetComponentsInChildren<Transform>().ToList();
         //CopyBoneAsChild(new CopyItem{Source=sources.First(x=>x.name == "head"), Destination=targets.First(x=>x.name == "mixamorig:Neck")});
-        // CopyBoneAsChild("butt",                 "mixamorig:Hips",           new Vector3(0, -.061f, 0),          Quaternion.Euler(0, 90, 90));
-        CopyBoneAsChild("butt",                 "mixamorig:Hips",           new Vector3(.01f, -.057f, .004f),          Quaternion.Euler(0, 88.2f, 88.8f));
-        CopyBoneAsChild("lower_waist",          "mixamorig:Spine",          new Vector3(0, .012f, 0),           Quaternion.Euler(0, 90, 90));
-        CopyBoneAsChild("upper_waist",          "mixamorig:Spine1",         new Vector3(0, .048f, 0),           Quaternion.Euler(0, 90, 90));
-        CopyBoneAsChild("torso",                "mixamorig:Spine2",         new Vector3(0, .046f, 0),           Quaternion.Euler(0, 90, 90));
-        CopyBoneAsChild("head",                 "mixamorig:Head",           new Vector3(0,.05f,.002f),          Quaternion.Euler(0, 0, 0));
+        // CopyBoneAsChild("butt",             "mixamorig:Hips",           new Vector3(.01f, -.057f, .004f),       Quaternion.Euler(0, 88.2f, 88.8f));
+        CopyBoneAsChild("butt",             "mixamorig:Hips",           new Vector3(.01f, -.057f, .004f),       Quaternion.Euler(90, 88.2f, 88.8f));
+        CopyBoneAsChild("lower_waist",      "mixamorig:Spine",          new Vector3(0, .012f, 0),               Quaternion.Euler(90, 90, 90));
+        CopyBoneAsChild("upper_waist",      "mixamorig:Spine1",         new Vector3(0, .048f, 0),               Quaternion.Euler(90, 90, 90));
+        CopyBoneAsChild("torso",            "mixamorig:Spine2",         new Vector3(0, .046f, 0),               Quaternion.Euler(90, 90, 90));
+        CopyBoneAsChild("head",             "mixamorig:Head",           new Vector3(0,.05f,.002f),              Quaternion.Euler(0, 0, 0));
 
-        CopyBoneAsChild("left_upper_arm",       "mixamorig:LeftArm",        new Vector3(.005f, .198f, -.011f),  Quaternion.Euler(-2, 0, 0));
-        CopyBoneAsChild("left_larm",            "mixamorig:LeftForeArm",    new Vector3(-.008f, .162f, -.022f),      Quaternion.Euler(-2.71f, 0, 3));
-        CopyBoneAsChild("left_hand",            "mixamorig:LeftHand",       new Vector3(-.013f, .04f, -.03f),            Quaternion.Euler(0, 0, 0));
+        CopyBoneAsChild("left_upper_arm",   "mixamorig:LeftArm",        new Vector3(.005f, .198f, -.011f),      Quaternion.Euler(180-2, 0, 0));
+        CopyBoneAsChild("left_larm",        "mixamorig:LeftForeArm",    new Vector3(-.008f, .162f, -.022f),     Quaternion.Euler(180-2.71f, 0, 3));
+        CopyBoneAsChild("left_hand",        "mixamorig:LeftHand",       new Vector3(-.013f, .04f, -.03f),       Quaternion.Euler(180, 0, 0));
         
-        CopyBoneAsChild("right_upper_arm",      "mixamorig:RightArm",       new Vector3(.005f, .198f, .011f),   Quaternion.Euler(2, 0, 0));
-        CopyBoneAsChild("right_larm",           "mixamorig:RightForeArm",   new Vector3(.005f, .163f, .035f),      Quaternion.Euler(5, 0, 3));
-        CopyBoneAsChild("right_hand",            "mixamorig:RightHand",      new Vector3(.001f, .04f, .0492f),            Quaternion.Euler(0, 0, 0));
+        CopyBoneAsChild("right_upper_arm",  "mixamorig:RightArm",       new Vector3(.005f, .198f, .011f),       Quaternion.Euler(182, 0, 0));
+        CopyBoneAsChild("right_larm",       "mixamorig:RightForeArm",   new Vector3(.005f, .163f, .035f),       Quaternion.Euler(185, 0, 3));
+        CopyBoneAsChild("right_hand",       "mixamorig:RightHand",      new Vector3(.001f, .04f, .0492f),       Quaternion.Euler(180, 0, 0));
 
-        CopyBoneAsChild("left_thigh",          "mixamorig:LeftUpLeg",      new Vector3(0, .209f, .006f),            Quaternion.Euler(0, 0, 0));
-        CopyBoneAsChild("left_shin",           "mixamorig:LeftLeg",        new Vector3(.0f, .185f, .004f),            Quaternion.Euler(0, 0, -3));
-        CopyBoneAsChild("left_left_foot",      "mixamorig:LeftToeBase",       new Vector3(-.024f, -.0622f, .0326f),      Quaternion.Euler(-8, 0, 3));
-        CopyBoneAsChild("right_left_foot",     "mixamorig:LeftToeBase",       new Vector3(.019f, -.061f, .03f),           Quaternion.Euler(-8, 0, -8));
+        CopyBoneAsChild("left_thigh",       "mixamorig:LeftUpLeg",      new Vector3(0, .209f, .006f),           Quaternion.Euler(0, 0, 0));
+        CopyBoneAsChild("left_shin",        "mixamorig:LeftLeg",        new Vector3(.0f, .185f, .004f),         Quaternion.Euler(0, 0, -3));
+        CopyBoneAsChild("left_left_foot",   "mixamorig:LeftToeBase",    new Vector3(-.024f, -.0622f, .0326f),   Quaternion.Euler(-8, 0, 3));
+        CopyBoneAsChild("right_left_foot",  "mixamorig:LeftToeBase",    new Vector3(.019f, -.061f, .03f),       Quaternion.Euler(-8, 0, -8));
 
-        CopyBoneAsChild("right_thigh",          "mixamorig:RightUpLeg",      new Vector3(0, .209f, .006f),            Quaternion.Euler(0, 0, 0));
-        CopyBoneAsChild("right_shin",           "mixamorig:RightLeg",        new Vector3(0, .185f, .004f),            Quaternion.Euler(0, 0, -3));
-        CopyBoneAsChild("right_right_foot",     "mixamorig:RightToeBase",       new Vector3(-.024f, -.0622f, .0326f),      Quaternion.Euler(-8, 0, 3));
-        CopyBoneAsChild("left_right_foot",      "mixamorig:RightToeBase",       new Vector3(.0144f, -.061f, .03f),           Quaternion.Euler(-8, 0, -8));
+        CopyBoneAsChild("right_thigh",      "mixamorig:RightUpLeg",     new Vector3(0, .209f, .006f),           Quaternion.Euler(0, 0, 0));
+        CopyBoneAsChild("right_shin",       "mixamorig:RightLeg",       new Vector3(0, .185f, .004f),           Quaternion.Euler(0, 0, -3));
+        CopyBoneAsChild("right_right_foot", "mixamorig:RightToeBase",   new Vector3(-.024f, -.0622f, .0326f),   Quaternion.Euler(-8, 0, 3));
+        CopyBoneAsChild("left_right_foot",  "mixamorig:RightToeBase",   new Vector3(.0144f, -.061f, .03f),      Quaternion.Euler(-8, 0, -8));
 
         // fix connected bodies
         var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
@@ -123,13 +123,13 @@ public class CopyRagDoll : MonoBehaviour {
 
         // IgnoreCollision("", new []{""});
 
-        FlipAnchor("right_upper_arm");
-        FlipAnchor("right_shoulder2");
-        FlipAnchor("right_larm");
+        // FlipAnchor("right_upper_arm");
+        // FlipAnchor("right_shoulder2");
+        // FlipAnchor("right_larm");
 
-        FlipAnchor("left_upper_arm");
-        FlipAnchor("left_shoulder2");
-        FlipAnchor("left_larm");
+        // FlipAnchor("left_upper_arm");
+        // FlipAnchor("left_shoulder2");
+        // FlipAnchor("left_larm");
 
         FlipAnchor("right_thigh");
         FlipAnchor("right_hip_z");
