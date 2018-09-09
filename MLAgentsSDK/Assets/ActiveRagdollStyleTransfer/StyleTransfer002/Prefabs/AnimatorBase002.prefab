@@ -84,6 +84,9 @@ GameObject:
   - component: {fileID: 4723211230811750}
   - component: {fileID: 95210088044579240}
   - component: {fileID: 114014129121716000}
+  - component: {fileID: 114468688356166752}
+  - component: {fileID: 114492626810416620}
+  - component: {fileID: 114852724995850538}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -381,7 +384,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1578324087289452
 GameObject:
   m_ObjectHideFlags: 1
@@ -441,7 +444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1610184555738188
 GameObject:
   m_ObjectHideFlags: 1
@@ -1009,7 +1012,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1607183694721680}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1463,7 +1466,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1046992520020096}
-  m_LocalRotation: {x: 0.7049101, y: -0.026212664, z: 0.013773171, w: 0.70867836}
+  m_LocalRotation: {x: 0.7072721, y: -0.029575588, z: 0.010734499, w: 0.70624095}
   m_LocalPosition: {x: 0.028619736, y: 1.0587679, z: 0.002142583}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1471,7 +1474,7 @@ Transform:
   - {fileID: 4825986847105306}
   m_Father: {fileID: 4080187831928170}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 91.52899, y: 85.23399, z: 88.501}
 --- !u!4 &4708243848899406
 Transform:
   m_ObjectHideFlags: 1
@@ -1785,7 +1788,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: fa0773caae34843268db7f12c1421ce5, type: 3}
   m_Controller: {fileID: 9100000, guid: b1b909ee490e74bcdb043fcd491f0a8f, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 1
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
@@ -1809,6 +1812,146 @@ MonoBehaviour:
   IsLoopingAnimation: 0
   NormalizedTime: 0
   Lenght: 0
+--- !u!114 &114468688356166752
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1079925343487550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2c554c731c3543c293a12a45e0a92fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionTable:
+  - Source: {fileID: 0}
+    Destination: {fileID: 4416897570212422}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4416897570212422}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4416897570212422}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4813031776152458}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4249864308962066}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4708243848899406}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4529835539549760}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4366414316734226}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4094843276699482}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4876453327586560}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4620142344006466}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4416897570212422}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4059413158451854}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4834266839319608}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4358414052512360}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4416897570212422}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4906902058426894}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4384823662260714}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4779854734094862}
+  CopyTable:
+  - Source: {fileID: 0}
+    Destination: {fileID: 4685241573679092}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4749270699059942}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4185166847819634}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4274274179025038}
+  - Source: {fileID: 0}
+    Destination: {fileID: 4864188477499104}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+  - Source: {fileID: 0}
+    Destination: {fileID: 0}
+--- !u!114 &114492626810416620
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1079925343487550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbee4689469f148ca897ef6aabbab08d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualizeAnimator: 1
+  Muscles: []
+  PositionDistance: 0
+  EndEffectorDistance: 0
+  RotationDistance: 0
+  VelocityDistance: 0
+  CenterOfMass: {x: 0, y: 0, z: 0}
+  IgnorRewardUntilObservation: 0
+  ErrorCutoff: 0
+  DebugShowWithOffset: 0
+  DebugDisableMotor: 0
+  DebugAnimOffset: 0
+  Phase: 0
+  TimeStep: 0
+  AnimationIndex: 0
+  EpisodeAnimationIndex: 0
+  StartAnimationIndex: 0
+  UseRandomIndex: 0
+  CameraFollowMe: 0
+  CameraTarget: {fileID: 0}
+--- !u!114 &114852724995850538
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1079925343487550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9cfe0db841e420283facda78fa8b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 0}
+  agentParameters:
+    agentCameras: []
+    maxStep: 5000
+    resetOnDone: 1
+    onDemandDecision: 1
+    numberOfActionsBetweenDecisions: 5
+  SensorIsInTouch: []
+  ShowMonitor: 0
 --- !u!137 &137049582902374914
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

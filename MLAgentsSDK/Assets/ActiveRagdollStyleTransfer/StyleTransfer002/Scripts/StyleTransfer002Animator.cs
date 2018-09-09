@@ -81,12 +81,17 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		var endTime = 1f;
 		if (IsLoopingAnimation)
 			endTime = 3f;
+		if (_animBones?.Count == 0){
+			StopAnimation();
+			BecomeRagDoll();
+			return;
+		}
 		if (NormalizedTime <= endTime) {
 			UpdateAnimationStep(timeStep);
 		}
 		else {
-			AnimationStepsReady = true;
-			anim.enabled=false;
+			StopAnimation();
+			BecomeRagDoll();
 		}
 	}
 	void UpdateAnimationStep(float timeStep)
@@ -137,4 +142,17 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		}
 		AnimationSteps.Add(animStep);
     }
+	public void BecomeRagDoll()
+	{
+		var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
+		foreach (var rb in rigidbodies)
+		{
+			rb.isKinematic = false;
+		}
+	}
+	public void StopAnimation()
+	{
+		AnimationStepsReady = true;
+		anim.enabled=false;
+	}
 }

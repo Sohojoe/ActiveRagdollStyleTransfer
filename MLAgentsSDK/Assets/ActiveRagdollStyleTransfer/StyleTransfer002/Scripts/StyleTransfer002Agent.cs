@@ -67,8 +67,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		int i = 0;
 		foreach (var muscle in _master.Muscles)
 		{
-			if(muscle.Parent == null)
-				continue;
+			// if(muscle.Parent == null)
+			// 	continue;
 			if (muscle.ConfigurableJoint.angularXMotion != ConfigurableJointMotion.Locked)
 				muscle.TargetNormalizedRotationX = vectorAction[i++];
 			if (muscle.ConfigurableJoint.angularYMotion != ConfigurableJointMotion.Locked)
