@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class RagDoll002 : MonoBehaviour {
 
+    [System.Serializable]
+    public class MusclePower
+    {
+        public string Muscle;
+        public float Power;
+    }
+
+    public List<MusclePower> MusclePowers;
+
 	// Use this for initialization
 	void Start () {
 		Setup();

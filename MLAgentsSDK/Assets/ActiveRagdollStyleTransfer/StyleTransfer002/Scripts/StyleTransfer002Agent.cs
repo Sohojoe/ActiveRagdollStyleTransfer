@@ -123,8 +123,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		if (!_master.IgnorRewardUntilObservation)
 			AddReward(reward);
 		if (!IsDone()){
-			//if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
-			if (distanceReward <= 0f && !_master.DebugShowWithOffset) {
+			if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
+			// if (distanceReward <= 0f && !_master.DebugShowWithOffset) {
 				AddReward(-1f);
 				Done();
 				// _master.StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
@@ -134,8 +134,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 			if (_master.IsDone()){
 				// AddReward(1f*(float)this.GetStepCount());
 				Done();
-				//if (_master.StartAnimationIndex > 0 && distanceReward >= _master.ErrorCutoff)
-				if (_master.StartAnimationIndex > 0 && distanceReward > 0f)
+				if (_master.StartAnimationIndex > 0 && distanceReward >= _master.ErrorCutoff)
+				// if (_master.StartAnimationIndex > 0 && distanceReward > 0f)
 				 	_master.StartAnimationIndex--;
 			}
 		}

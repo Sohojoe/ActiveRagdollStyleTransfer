@@ -195,7 +195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1269309546828682
 GameObject:
   m_ObjectHideFlags: 0
@@ -2105,6 +2105,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e788eb6109bb04aa1bd822f9fc98f4bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MusclePowers:
+  - Muscle: butt
+    Power: 40
+  - Muscle: lower_waist
+    Power: 40
+  - Muscle: abdomen_y
+    Power: 40
+  - Muscle: right_thigh
+    Power: 40
+  - Muscle: right_hip_z
+    Power: 40
+  - Muscle: right_hip_y
+    Power: 120
+  - Muscle: right_shin
+    Power: 80
+  - Muscle: right_right_foot
+    Power: 20
+  - Muscle: right_ankle_x
+    Power: 20
+  - Muscle: left_thigh
+    Power: 40
+  - Muscle: left_hip_z
+    Power: 40
+  - Muscle: left_hip_y
+    Power: 120
+  - Muscle: left_shin
+    Power: 80
+  - Muscle: left_left_foot
+    Power: 20
+  - Muscle: left_ankle_x
+    Power: 20
+  - Muscle: right_upper_arm
+    Power: 20
+  - Muscle: right_shoulder2
+    Power: 20
+  - Muscle: right_larm
+    Power: 40
+  - Muscle: left_upper_arm
+    Power: 20
+  - Muscle: left_shoulder2
+    Power: 20
+  - Muscle: left_larm
+    Power: 40
 --- !u!114 &114933075683068078
 MonoBehaviour:
   m_ObjectHideFlags: 1

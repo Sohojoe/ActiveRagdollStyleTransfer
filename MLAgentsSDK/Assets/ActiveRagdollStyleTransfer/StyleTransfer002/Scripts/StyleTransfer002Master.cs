@@ -17,6 +17,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public bool IgnorRewardUntilObservation;
 	public float ErrorCutoff;
 	public bool DebugShowWithOffset;
+	public bool DebugMode;
 	public bool DebugDisableMotor;
     [Range(-100,100)]
 	public int DebugAnimOffset;
@@ -75,6 +76,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		Muscles = new List<Muscle002> ();
 		var musicles = GetComponentsInChildren<ConfigurableJoint>();
 		ConfigurableJoint rootConfigurableJoint = null;
+		var ragDoll = GetComponent<RagDoll002>();
 		foreach (var m in musicles)
 		{
 			var muscle = new Muscle002{
@@ -83,6 +85,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 				ConfigurableJoint = m,
 				Name = m.name,
 				Group = FromName(m.name),
+				MaximumForce = new Vector3(ragDoll.MusclePowers.First(x=>x.Muscle == m.name).Power,0,0)
 			};
 			if (muscle.Group == MuscleGroup002.Hips)
 				rootConfigurableJoint = muscle.ConfigurableJoint;
@@ -117,12 +120,14 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	void FixedUpdate()
 	{
+		if (DebugMode)
+			AnimationIndex = 0;
 		var debugStepIdx = AnimationIndex;
 		StyleTransfer002Animator.AnimationStep animStep = null;
 		StyleTransfer002Animator.AnimationStep debugAnimStep = null;
 		if (_phaseIsRunning) {
-			if (DebugShowWithOffset){
 				debugStepIdx += DebugAnimOffset;
+			if (DebugShowWithOffset){
 				debugStepIdx = Mathf.Clamp(debugStepIdx, 0, _muscleAnimator.AnimationSteps.Count);
 				debugAnimStep = _muscleAnimator.AnimationSteps[debugStepIdx];
 			}
