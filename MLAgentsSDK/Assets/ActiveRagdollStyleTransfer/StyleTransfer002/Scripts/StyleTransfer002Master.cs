@@ -132,24 +132,11 @@ public class StyleTransfer002Master : MonoBehaviour {
 		EndEffectorDistance = 0f;
 		RotationDistance = 0f;
 		VelocityDistance = 0f;
+		if (_phaseIsRunning && DebugShowWithOffset)
+			MimicAnimationFrame(debugAnimStep);
 		foreach (var muscle in Muscles)
 		{
 			var i = Muscles.IndexOf(muscle);
-			// if(muscle.Parent == null)
-			// 	continue;
-			if (_phaseIsRunning){
-
-				if (DebugShowWithOffset) {
-					muscle.MoveToAnim(
-						transform.parent.position + debugAnimStep.Positions[i], 
-						transform.parent.rotation * debugAnimStep.Rotaions[i],
-						debugAnimStep.RotaionVelocities[i].eulerAngles / Time.fixedDeltaTime,
-						debugAnimStep.Velocities[i] / Time.fixedDeltaTime);
-				}
-				muscle.SetAnimationPosition(
-					transform.parent.position + animStep.Positions[i], 
-					transform.parent.rotation * animStep.Rotaions[i]);
-			}
 			muscle.UpdateObservations();
 			if (!DebugShowWithOffset && !DebugDisableMotor)
 				muscle.UpdateMotor();
@@ -190,6 +177,42 @@ public class StyleTransfer002Master : MonoBehaviour {
 			Phase = _muscleAnimator.AnimationSteps[AnimationIndex].NormalizedTime % 1f;
 		}
 	}
+	void MimicAnimationFrame(StyleTransfer002Animator.AnimationStep animStep)
+	{
+		var animBones = GetComponentsInChildren<Rigidbody>()
+			.Where(x=>x.GetComponent<ConfigurableJoint>() != null)
+			//.Select(x=>x.transform)
+			.ToList();
+		// foreach (var bone in animBones)
+		// 	bone.isKinematic = true;
+		foreach (var bone in animBones)
+		{
+			if (bone.name.Contains("lower_waist"))
+				animStep = animStep;
+			var i = animStep.Names.IndexOf(bone.name);
+			var muscle = Muscles.FirstOrDefault(x=>x.Name==bone.name);
+			Vector3 animPosition = transform.parent.position + animStep.Positions[i];
+			Quaternion animRotation = transform.parent.rotation * animStep.Rotaions[i];
+			Vector3 angularVelocity = animStep.RotaionVelocities[i].eulerAngles / Time.fixedDeltaTime;
+			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
+			// angularVelocity = Vector3.zero;
+			// velocity = Vector3.zero;
+			if (muscle == null) {
+		        bone.position = animPosition;
+        		bone.rotation = animRotation;
+        		bone.GetComponent<Rigidbody>().angularVelocity = angularVelocity;
+        		bone.GetComponent<Rigidbody>().velocity = velocity;
+			} else {
+				muscle.MoveToAnim(animPosition, animRotation, angularVelocity, velocity);
+				muscle.SetAnimationPosition(
+					transform.parent.position + animStep.Positions[i], 
+					transform.parent.rotation * animStep.Rotaions[i]);
+			}
+		}
+		// foreach (var bone in animBones)
+		// 	bone.isKinematic = false;
+	}
+
 	protected virtual void LateUpdate() {
 		if (_resetCenterOfMassOnLastUpdate){
 			CenterOfMass = GetCenterOfMass();
@@ -267,18 +290,8 @@ public class StyleTransfer002Master : MonoBehaviour {
 		_resetCenterOfMassOnLastUpdate = true;
 		_fakeVelocity = true;
 		foreach (var muscle in Muscles)
-		{
-			var i = Muscles.IndexOf(muscle);
 			muscle.Init();
-			muscle.MoveToAnim(
-				transform.parent.position + animStep.Positions[i], 
-				transform.parent.rotation * animStep.Rotaions[i],
-				animStep.RotaionVelocities[i].eulerAngles / Time.fixedDeltaTime,
-				animStep.Velocities[i] / Time.fixedDeltaTime);
-			muscle.SetAnimationPosition(
-				transform.parent.position + animStep.Positions[i], 
-				transform.parent.rotation * animStep.Rotaions[i]);
-		}
+		MimicAnimationFrame(animStep);
 		EpisodeAnimationIndex = AnimationIndex;
 	}
 

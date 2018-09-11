@@ -17,8 +17,10 @@ public class RagDoll002 : MonoBehaviour {
 
 	void Setup () {
 		// handle collision overlaps
-        IgnoreCollision("torso", new []{"left_upper_arm", "right_upper_arm", "upper_waist"});
-        IgnoreCollision("upper_waist", new []{"left_upper_arm", "right_upper_arm"});
+        // IgnoreCollision("torso", new []{"left_upper_arm", "right_upper_arm", "upper_waist"});
+        // IgnoreCollision("upper_waist", new []{"left_upper_arm", "right_upper_arm", "torso"});
+        IgnoreCollision("torso", new []{"left_upper_arm", "right_upper_arm"});
+        //IgnoreCollision("lower_waist", new []{"upper_waist", "butt"});
         IgnoreCollision("butt", new []{"left_thigh", "right_thigh"});
 
         IgnoreCollision("left_larm", new []{"left_upper_arm", "left_hand"});
@@ -26,11 +28,18 @@ public class RagDoll002 : MonoBehaviour {
         IgnoreCollision("left_shin", new []{"left_thigh"});
         IgnoreCollision("right_shin", new []{"right_thigh"});
 
-        IgnoreCollision("right_right_foot", new []{"left_right_foot"});
-        IgnoreCollision("right_shin", new []{"left_right_foot", "right_right_foot"});
-        IgnoreCollision("right_left_foot", new []{"left_left_foot"});
-        IgnoreCollision("left_shin", new []{"left_left_foot", "right_left_foot"});
+        // IgnoreCollision("right_right_foot", new []{"left_right_foot"});
+        // IgnoreCollision("right_shin", new []{"left_right_foot", "right_right_foot"});
+        // IgnoreCollision("right_left_foot", new []{"left_left_foot"});
+        // IgnoreCollision("left_shin", new []{"left_left_foot", "right_left_foot"});
+        IgnoreCollision("right_shin", new []{"right_right_foot"});
+        IgnoreCollision("left_shin", new []{"left_left_foot"});
 
+
+        //
+        var joints = GetComponentsInChildren<Joint>().ToList();
+        foreach (var joint in joints)
+            joint.enablePreprocessing = false;
 	}
 	void IgnoreCollision(string first, string[] seconds)
     {
