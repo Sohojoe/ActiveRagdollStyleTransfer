@@ -2187,7 +2187,7 @@ MonoBehaviour:
   CenterOfMass: {x: 0, y: 0, z: 0}
   IgnorRewardUntilObservation: 0
   ErrorCutoff: 0
-  DebugShowWithOffset: 1
+  DebugShowWithOffset: 0
   DebugDisableMotor: 0
   DebugAnimOffset: 0
   Phase: 0
@@ -2196,7 +2196,7 @@ MonoBehaviour:
   EpisodeAnimationIndex: 0
   StartAnimationIndex: 0
   UseRandomIndex: 1
-  CameraFollowMe: 1
+  CameraFollowMe: 0
   CameraTarget: {fileID: 4931074874521446}
 --- !u!135 &135895159653996910
 SphereCollider:
