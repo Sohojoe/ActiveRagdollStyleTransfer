@@ -198,9 +198,10 @@ public class StyleTransfer002Master : MonoBehaviour {
 			var muscle = Muscles.FirstOrDefault(x=>x.Name==bone.name);
 			Vector3 animPosition = transform.parent.position + animStep.Positions[i];
 			Quaternion animRotation = transform.parent.rotation * animStep.Rotaions[i];
-			Vector3 angularVelocity = animStep.RotaionVelocities[i].eulerAngles / Time.fixedDeltaTime;
+			// Vector3 angularVelocity = animStep.RotaionVelocities[i].eulerAngles / Time.fixedDeltaTime;
+			Vector3 angularVelocity = animStep.AngularVelocities[i] / Time.fixedDeltaTime;
 			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
-			// angularVelocity = Vector3.zero;
+			angularVelocity = Vector3.zero;
 			// velocity = Vector3.zero;
 			if (muscle == null) {
 		        bone.position = animPosition;

@@ -232,7 +232,6 @@ public class Muscle002
         Transform.position = animPosition;
         Transform.rotation = animRotation;
         Rigidbody.angularVelocity = angularVelocity;
-        // velocity = new Vector3(0f,0f,1.68f);
         Rigidbody.velocity = velocity;
     }
     public void SetAnimationPosition(Vector3 animPosition, Quaternion animRotation)
