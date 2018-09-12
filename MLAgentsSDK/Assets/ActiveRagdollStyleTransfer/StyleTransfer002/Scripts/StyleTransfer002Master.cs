@@ -56,7 +56,9 @@ public class StyleTransfer002Master : MonoBehaviour {
             return MuscleGroup002.LegLower;
         if (name.Contains("foot") || name.Contains("ankle"))
             return MuscleGroup002.Foot;
-        if (name.Contains("torso") || name.Contains("waist") || name.Contains("abdomen"))
+        if (name.Contains("torso"))
+            return MuscleGroup002.Torso;
+        if (name.Contains("waist") || name.Contains("abdomen"))
             return MuscleGroup002.Spine;
         if (name.Contains("head"))
             return MuscleGroup002.Head;
@@ -147,7 +149,9 @@ public class StyleTransfer002Master : MonoBehaviour {
 				muscle.UpdateMotor();
 			if (_phaseIsRunning){
 				PositionDistance += muscle.ObsDeltaFromAnimationPosition.magnitude;
-				if (muscle.Group == MuscleGroup002.Hand || muscle.Group == MuscleGroup002.Foot)
+				if (muscle.Group == MuscleGroup002.Elbow // Hand is not a muscle
+					|| muscle.Group == MuscleGroup002.Torso
+					|| muscle.Group == MuscleGroup002.Foot)
 					EndEffectorDistance += muscle.ObsDeltaFromAnimationPosition.magnitude;
 				RotationDistance += Mathf.Abs(muscle.ObsAngleDeltaFromAnimationRotation)/360f;
 			}
