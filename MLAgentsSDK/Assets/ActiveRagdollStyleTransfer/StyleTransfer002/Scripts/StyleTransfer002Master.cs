@@ -185,7 +185,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	void MimicAnimationFrame(StyleTransfer002Animator.AnimationStep animStep)
 	{
 		var animBones = GetComponentsInChildren<Rigidbody>()
-			.Where(x=>x.GetComponent<ConfigurableJoint>() != null)
+			//.Where(x=>x.GetComponent<ConfigurableJoint>() != null)
 			//.Select(x=>x.transform)
 			.ToList();
 		// foreach (var bone in animBones)
