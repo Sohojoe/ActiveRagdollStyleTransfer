@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,23 +6,16 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class Muscle002
+public class BodyPart002
 {
+    
     public string Name;
-    public BodyHelper002.MuscleGroup Group;
-
-    [Range(-1,1)]
-    public float TargetNormalizedRotationX;
-    [Range(-1,1)]
-    public float TargetNormalizedRotationY;
-    [Range(-1,1)]
-    public float TargetNormalizedRotationZ;
-    public Vector3 MaximumForce;
+    public BodyHelper002.BodyPartGroup Group;
 
     public Vector3 ObsLocalPosition;
     public Quaternion ObsRotation;
-    public Vector3 ObsNormalizedRotation;
-    public Vector3 ObsNormalizedDeltaFromTargetRotation;
+    // public Vector3 ObsNormalizedRotation;
+    // public Vector3 ObsNormalizedDeltaFromTargetRotation;
     public Vector3 ObsRotationVelocity;
     public Vector3 ObsVelocity;
     public Quaternion ObsNormalizedDeltaFromAnimationRotation;
@@ -38,9 +32,7 @@ public class Muscle002
 
     public Rigidbody Rigidbody;
     public Transform Transform;
-    public ConfigurableJoint ConfigurableJoint;
-    public Rigidbody Parent;
-    public ConfigurableJoint RootConfigurableJoint;
+    public BodyPart002 Root;
     public Quaternion InitialRootRotation;
     public Vector3 InitialRootPosition;
 
@@ -51,31 +43,6 @@ public class Muscle002
     bool _hasRanVeryFirstInit;
     private Vector3 _animationPosition;
     private Quaternion _animationRotation;
-
-
-    public void UpdateMotor()
-    {
-		var t = ConfigurableJoint.targetAngularVelocity;
-		t.x = TargetNormalizedRotationX * MaximumForce.x;
-		t.y = TargetNormalizedRotationY * MaximumForce.y;
-		t.z = TargetNormalizedRotationZ * MaximumForce.z;
-		ConfigurableJoint.targetAngularVelocity = t;
-
-		var angX = ConfigurableJoint.angularXDrive;
-		angX.positionSpring = 1f;
-		var scale = MaximumForce.x * Mathf.Pow(Mathf.Abs(TargetNormalizedRotationX), 3);
-		angX.positionDamper = Mathf.Max(1f, scale);
-		angX.maximumForce = Mathf.Max(1f, MaximumForce.x);
-		ConfigurableJoint.angularXDrive = angX;
-
-        var maxForce = (MaximumForce.y + MaximumForce.z) / 2;
-		var angYZ = ConfigurableJoint.angularYZDrive;
-		angYZ.positionSpring = 1f;
-		scale = maxForce * Mathf.Pow((Mathf.Abs(TargetNormalizedRotationY) + Mathf.Abs(TargetNormalizedRotationZ))/2, 3);
-		angYZ.positionDamper = Mathf.Max(1f, scale);
-		angYZ.maximumForce = Mathf.Max(1f, maxForce);
-		ConfigurableJoint.angularYZDrive = angYZ;
-	}    
 
     static Vector3 NormalizedEulerAngles(Vector3 eulerAngles)
     {
@@ -93,16 +60,6 @@ public class Muscle002
         z = z / 180f;
         return new Vector3(x,y,z);
     }
-    static Vector3 ScaleNormalizedByJoint(Vector3 normalizedRotation, ConfigurableJoint configurableJoint)
-    {
-        var x = normalizedRotation.x > 0f ?
-            (normalizedRotation.x * 180f) / configurableJoint.highAngularXLimit.limit :
-            (-normalizedRotation.x * 180f) / configurableJoint.lowAngularXLimit.limit;
-        var y = (normalizedRotation.y * 180f) / configurableJoint.angularYLimit.limit;
-        var z = (normalizedRotation.z * 180f) / configurableJoint.angularZLimit.limit;
-        var scaledNormalizedRotation = new Vector3(x,y,z);
-        return scaledNormalizedRotation;
-    }
 
     static Vector3 Vector3Max (Vector3 a, Vector3 b)
     {
@@ -116,15 +73,16 @@ public class Muscle002
     public void Init()
     {
         _firstRunComplete = false;
-        Rigidbody.angularVelocity = Vector3.zero;
-        Rigidbody.velocity = Vector3.zero;
-
+        if (Rigidbody != null){
+            Rigidbody.angularVelocity = Vector3.zero;
+            Rigidbody.velocity = Vector3.zero;
+        }
 
         if (!_hasRanVeryFirstInit) {
-			Parent = ConfigurableJoint.connectedBody;
+			//Parent = ConfigurableJoint.connectedBody;
 			
-            InitialRootRotation = RootConfigurableJoint.transform.rotation;
-            InitialRootPosition = RootConfigurableJoint.transform.position;
+            InitialRootRotation = Root.Transform.transform.rotation;
+            InitialRootPosition = Root.Transform.transform.position;
 
 			DefaultLocalRotation = LocalRotation;
 			// Vector3 forward = Vector3.Cross (ConfigurableJoint.axis, ConfigurableJoint.secondaryAxis).normalized;
@@ -144,23 +102,13 @@ public class Muscle002
     {
         ObsRotation = this.LocalRotation;
         ObsRotation = (ToJointSpaceInverse * UnityEngine.Quaternion.Inverse(this.LocalRotation) * this.ToJointSpaceDefault);
-        var r2 = (ToJointSpaceInverse * UnityEngine.Quaternion.Inverse(this.Transform.rotation) * this.ToJointSpaceDefault);
-        var s1 = ScaleNormalizedByJoint(NormalizedEulerAngles((this.LocalRotation * ToJointSpaceDefault).eulerAngles), ConfigurableJoint);
-        var s2 = ScaleNormalizedByJoint(NormalizedEulerAngles((Transform.localRotation * ToJointSpaceDefault).eulerAngles), ConfigurableJoint);
-        var s3 = ScaleNormalizedByJoint(NormalizedEulerAngles((this.LocalRotation * ToJointSpaceInverse).eulerAngles), ConfigurableJoint);
-        var s4 = ScaleNormalizedByJoint(NormalizedEulerAngles((Transform.localRotation * ToJointSpaceInverse).eulerAngles), ConfigurableJoint);
-        var s5 = ScaleNormalizedByJoint(NormalizedEulerAngles((UnityEngine.Quaternion.Inverse(this.LocalRotation) * ToJointSpaceDefault).eulerAngles), ConfigurableJoint);
         
         var normalizedRotation = NormalizedEulerAngles(ObsRotation.eulerAngles);
-        // var normalizedRotation = NormalizedEulerAngles(this.LocalRotation.eulerAngles);
-        ObsNormalizedRotation = ScaleNormalizedByJoint(normalizedRotation, ConfigurableJoint);
-        ObsNormalizedDeltaFromTargetRotation = 
-            new Vector3(TargetNormalizedRotationX, TargetNormalizedRotationY, TargetNormalizedRotationZ) - ObsNormalizedRotation;
 
         // Debug code 
-        if (Group == BodyHelper002.MuscleGroup.Head){
-            var debug = 1;
-        }
+        // if (Group == BodyHelper002.BodyPartGroup.Head){
+        //     var debug = 1;
+        // }
 
         if (_firstRunComplete == false){
             _lastUpdateObsTime = Time.time;
@@ -176,10 +124,7 @@ public class Muscle002
             rotationVelocity /= dt;
         ObsRotationVelocity = rotationVelocity;
         _lastObsRotation = ObsRotation;
-        var rootBone = RootConfigurableJoint.transform;
-        var toRootSpace = Quaternion.Inverse(RootConfigurableJoint.transform.rotation) * rootBone.rotation;
-        Quaternion rootRotation = Quaternion.Inverse(rootBone.rotation * toRootSpace) * Transform.rotation;
-        ObsLocalPosition = Transform.position - RootConfigurableJoint.transform.position;
+        ObsLocalPosition = Transform.position - Root.Transform.position;
         var velocity = ObsLocalPosition - _lastLocalPosition;
         ObsVelocity = velocity;
         if (dt > 0f)
@@ -231,8 +176,10 @@ public class Muscle002
     {
         Transform.position = animPosition;
         Transform.rotation = animRotation;
-        Rigidbody.angularVelocity = angularVelocity;
-        Rigidbody.velocity = velocity;
+        if (Rigidbody != null){
+            Rigidbody.angularVelocity = angularVelocity;
+            Rigidbody.velocity = velocity;
+        }
     }
     public void SetAnimationPosition(Vector3 animPosition, Quaternion animRotation)
     {

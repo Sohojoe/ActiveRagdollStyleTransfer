@@ -25,7 +25,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 	Quaternion _initialBaseRotation;
 	List<Quaternion> _initialRotations;
 
-	List<Transform> _animBones;
+	public List<BodyPart002> BodyParts;
 
     private Vector3 _lastVelocityPosition;
 
@@ -34,13 +34,13 @@ public class StyleTransfer002Animator : MonoBehaviour {
 	{
 		public float TimeStep;
 		public float NormalizedTime;
-		public List<Vector3> RootPositions;
+		// public List<Vector3> RootPositions;
 		public List<Vector3> Velocities;
 		public Vector3 Velocity;
 		public List<Quaternion> RotaionVelocities;
 		public List<Vector3> AngularVelocities;
 		// public List<Vector3> NormalizedAngularVelocities;
-		public List<Quaternion> RootRotations;
+		// public List<Quaternion> RootRotations;
 		public List<Vector3> RootAngles;
 
 		public List<Vector3> Positions;
@@ -60,20 +60,34 @@ public class StyleTransfer002Animator : MonoBehaviour {
 	}
 	void Reset()
 	{
-		_animBones = GetComponentsInChildren<Rigidbody>()
-			//.Where(x=>x.GetComponent<Joint>() != null)
-			.Select(x=>x.transform)
-			.ToList();
-		//var boneCount = _master.Muscles.Count;
-		var boneCount = _animBones.Count;
+		BodyParts = new List<BodyPart002> ();
+		BodyPart002 root = null;
+		foreach (var t in GetComponentsInChildren<Transform>())
+		{
+			if (BodyHelper002.GetBodyPartGroup(t.name) == BodyHelper002.BodyPartGroup.None)
+				continue;
+			
+			var bodyPart = new BodyPart002{
+				Rigidbody = t.GetComponent<Rigidbody>(),
+				Transform = t,
+				Name = t.name,
+				Group = BodyHelper002.GetBodyPartGroup(t.name), 
+			};
+			if (bodyPart.Group == BodyHelper002.BodyPartGroup.Hips)
+				root = bodyPart;
+			bodyPart.Root = root;
+			bodyPart.Init();
+			BodyParts.Add(bodyPart);
+		}
+		var partCount = BodyParts.Count;
 
-		_lastPosition = Enumerable.Repeat(Vector3.zero, boneCount).ToList();
-		_lastRotation = Enumerable.Repeat(Quaternion.identity, boneCount).ToList();
+		_lastPosition = Enumerable.Repeat(Vector3.zero, partCount).ToList();
+		_lastRotation = Enumerable.Repeat(Quaternion.identity, partCount).ToList();
 		_lastVelocityPosition = transform.position;
 		var anims = GetComponentsInChildren<Transform>();
-		//_animBones = _master.Muscles.Select(x=> anims.First(y=>y.name == x.Name).transform).ToList();
-		_initialRotations = _animBones
-			.Select(x=> x.rotation)
+		//_bodyParts = _master.Muscles.Select(x=> anims.First(y=>y.name == x.Name).transform).ToList();
+		_initialRotations = BodyParts
+			.Select(x=> x.Transform.rotation)
 			.ToList();
 		BecomeAnimated();
 	}
@@ -106,49 +120,54 @@ public class StyleTransfer002Animator : MonoBehaviour {
 			return;
 
 		// var c = _master.Muscles.Count;
-		var c = _animBones.Count;
+		var c = BodyParts.Count;
 		var animStep = new AnimationStep();
 		animStep.TimeStep = timeStep;
 		animStep.NormalizedTime = NormalizedTime;
-		animStep.RootPositions = Enumerable.Repeat(Vector3.zero, c).ToList();
+		// animStep.RootPositions = Enumerable.Repeat(Vector3.zero, c).ToList();
 		animStep.Velocities = Enumerable.Repeat(Vector3.zero, c).ToList();
 		animStep.RotaionVelocities = Enumerable.Repeat(Quaternion.identity, c).ToList();
 		animStep.AngularVelocities = Enumerable.Repeat(Vector3.zero, c).ToList();
 		// animStep.NormalizedAngularVelocities = Enumerable.Repeat(Vector3.zero, c).ToList();
-		animStep.RootRotations = Enumerable.Repeat(Quaternion.identity, c).ToList();
+		// animStep.RootRotations = Enumerable.Repeat(Quaternion.identity, c).ToList();
 		animStep.RootAngles = Enumerable.Repeat(Vector3.zero, c).ToList();
 		animStep.Positions = Enumerable.Repeat(Vector3.zero, c).ToList();
 		animStep.Rotaions = Enumerable.Repeat(Quaternion.identity, c).ToList();
 		animStep.Velocity = transform.position - _lastVelocityPosition;
-		animStep.Names = _animBones.Select(x=>x.name).ToList();
+		animStep.Names = BodyParts.Select(x=>x.Name).ToList();
 		_lastVelocityPosition = transform.position;
 
-		var rootBone = _animBones[0];
-		// Quaternion rootRotation = rootBone.rotation;
-		// var toRootSpace = Quaternion.Inverse(_master.Muscles[0].Rigidbody.rotation) * rootBone.rotation;
-		var toRootSpace = Quaternion.Inverse(_animBones[0].GetComponent<Rigidbody>().rotation) * rootBone.rotation;
+		var rootBone = BodyParts[0];
 
-		// foreach (var m in _master.Muscles)
-		// {
-		// 	var i = _master.Muscles.IndexOf(m);
-		// 	var animBone = _animBones[i];
-		foreach (var animBone in _animBones)
+		foreach (var bodyPart in BodyParts)
 		{
-			var i = _animBones.IndexOf(animBone);
-			Quaternion rootRotation = Quaternion.Inverse(rootBone.rotation * toRootSpace) * animBone.rotation;
-
-			animStep.RootPositions[i] = animBone.position - rootBone.position;
-			animStep.RootRotations[i] = rootRotation;
-			animStep.RootAngles[i] = rootRotation.eulerAngles;
-			animStep.Positions[i] = animBone.position - transform.parent.position;
-			animStep.Rotaions[i] = animBone.rotation * Quaternion.Inverse(transform.parent.rotation);
+			var i = BodyParts.IndexOf(bodyPart);
+			if (i ==0) {
+				animStep.Rotaions[i] = Quaternion.Inverse(bodyPart.InitialRootRotation) * bodyPart.Transform.rotation;
+				animStep.Positions[i] =  bodyPart.Transform.position - bodyPart.InitialRootPosition;
+				animStep.RootAngles[i] = animStep.Rotaions[i].eulerAngles;
+			}
+			else {
+				Quaternion rootRotation = Quaternion.Inverse(rootBone.Transform.rotation) * bodyPart.Transform.rotation;
+				animStep.RootAngles[i] = rootRotation.eulerAngles;
+				animStep.Positions[i] =  bodyPart.Transform.position - rootBone.Transform.position;
+				animStep.Rotaions[i] = rootRotation;				
+			}
+			
+			// if (NormalizedTime != 0f) {
+			// 	animStep.Velocities[i] = animStep.Positions[i] - _lastPosition[i];
+			// 	animStep.RotaionVelocities[i] = JointHelper002.FromToRotation(_lastRotation[i], animStep.Rotaions[i]);
+			// 	animStep.AngularVelocities[i] = animStep.RotaionVelocities[i].eulerAngles;
+			// }
+			// _lastPosition[i] = animStep.Positions[i];
+			// _lastRotation[i] = animStep.Rotaions[i];
 			if (NormalizedTime != 0f) {
-				animStep.Velocities[i] = animStep.Positions[i] - _lastPosition[i];
-				animStep.RotaionVelocities[i] = JointHelper002.FromToRotation(_lastRotation[i], animStep.Rotaions[i]);
+				animStep.Velocities[i] = bodyPart.Transform.position - _lastPosition[i];
+				animStep.RotaionVelocities[i] = JointHelper002.FromToRotation(_lastRotation[i], bodyPart.Transform.rotation);
 				animStep.AngularVelocities[i] = animStep.RotaionVelocities[i].eulerAngles;
 			}
-			_lastPosition[i] = animStep.Positions[i];
-			_lastRotation[i] = animStep.Rotaions[i];
+			_lastPosition[i] = bodyPart.Transform.position;
+			_lastRotation[i] = bodyPart.Transform.rotation;
 
 		}
 		AnimationSteps.Add(animStep);
@@ -228,16 +247,16 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		
 
 	}
-	void MimicBone(string name, string animBoneName, Vector3 offset, Quaternion rotationOffset)
+	void MimicBone(string name, string bodyPartName, Vector3 offset, Quaternion rotationOffset)
 	{
 		var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
 		var transforms = GetComponentsInChildren<Transform>().ToList();
 
-		var animBone = transforms.First(x=>x.name == animBoneName);
+		var bodyPart = transforms.First(x=>x.name == bodyPartName);
 		var target = rigidbodies.First(x=>x.name == name);
 
-		target.transform.position = animBone.transform.position + offset;
-		target.transform.rotation = animBone.transform.rotation * rotationOffset;
+		target.transform.position = bodyPart.transform.position + offset;
+		target.transform.rotation = bodyPart.transform.rotation * rotationOffset;
 	}
 
 	void MimicBone(string name, string animStartName, string animEndtName, Vector3 offset, Quaternion rotationOffset)

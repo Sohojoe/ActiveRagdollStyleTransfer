@@ -9,6 +9,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public bool visualizeAnimator = true;
 
 	public List<Muscle002> Muscles;
+	public List<BodyPart002> BodyParts;
 	public float PositionDistance;
 	public float EndEffectorDistance; // feet and hands
 	public float RotationDistance;
@@ -45,51 +46,44 @@ public class StyleTransfer002Master : MonoBehaviour {
 	Random _random = new Random();
 	Vector3 _lastCenterOfMass;
 
-	static MuscleGroup002 FromName(string name)
-    {
-        name = name.ToLower();
-        if (name.Contains("butt"))
-            return MuscleGroup002.Hips;
-        if (name.Contains("thigh") || name.Contains("hip"))
-            return MuscleGroup002.LegUpper;
-        if (name.Contains("shin"))
-            return MuscleGroup002.LegLower;
-        if (name.Contains("foot") || name.Contains("ankle"))
-            return MuscleGroup002.Foot;
-        if (name.Contains("torso"))
-            return MuscleGroup002.Torso;
-        if (name.Contains("waist") || name.Contains("abdomen"))
-            return MuscleGroup002.Spine;
-        if (name.Contains("head"))
-            return MuscleGroup002.Head;
-        if (name.Contains("upper_arm") || name.Contains("shoulder"))
-            return MuscleGroup002.Shoulder;
-		if (name.Contains("larm"))
-            return MuscleGroup002.Elbow;
-		if (name.Contains("hand"))
-            return MuscleGroup002.Hand;
-
-		throw new System.NotImplementedException();
-    }
-
-
 	// Use this for initialization
 	void Start () {
+		BodyParts = new List<BodyPart002> ();
+		BodyPart002 root = null;
+		foreach (var t in GetComponentsInChildren<Transform>())
+		{
+			if (BodyHelper002.GetBodyPartGroup(t.name) == BodyHelper002.BodyPartGroup.None)
+				continue;
+			
+			var bodyPart = new BodyPart002{
+				Rigidbody = t.GetComponent<Rigidbody>(),
+				Transform = t,
+				Name = t.name,
+				Group = BodyHelper002.GetBodyPartGroup(t.name), 
+			};
+			if (bodyPart.Group == BodyHelper002.BodyPartGroup.Hips)
+				root = bodyPart;
+			bodyPart.Root = root;
+			bodyPart.Init();
+			BodyParts.Add(bodyPart);
+		}
+		var partCount = BodyParts.Count;
+
 		Muscles = new List<Muscle002> ();
-		var musicles = GetComponentsInChildren<ConfigurableJoint>();
+		var muscles = GetComponentsInChildren<ConfigurableJoint>();
 		ConfigurableJoint rootConfigurableJoint = null;
 		var ragDoll = GetComponent<RagDoll002>();
-		foreach (var m in musicles)
+		foreach (var m in muscles)
 		{
 			var muscle = new Muscle002{
 				Rigidbody = m.GetComponent<Rigidbody>(),
 				Transform = m.GetComponent<Transform>(),
 				ConfigurableJoint = m,
 				Name = m.name,
-				Group = FromName(m.name),
+				Group = BodyHelper002.GetMuscleGroup(m.name),
 				MaximumForce = new Vector3(ragDoll.MusclePowers.First(x=>x.Muscle == m.name).Power,0,0)
 			};
-			if (muscle.Group == MuscleGroup002.Hips)
+			if (muscle.Group == BodyHelper002.MuscleGroup.Hips)
 				rootConfigurableJoint = muscle.ConfigurableJoint;
 			muscle.RootConfigurableJoint = rootConfigurableJoint;
 			muscle.Init();
@@ -151,13 +145,17 @@ public class StyleTransfer002Master : MonoBehaviour {
 				muscle.UpdateMotor();
 			if (!muscle.Rigidbody.useGravity)
 				continue; // skip sub joints
+		}
+		foreach (var bodyPart in BodyParts)
+		{
+			bodyPart.UpdateObservations();
 			if (_phaseIsRunning){
-				PositionDistance += muscle.ObsDeltaFromAnimationPosition.sqrMagnitude;
-				if (muscle.Group == MuscleGroup002.Elbow // Hand is not a muscle
-					|| muscle.Group == MuscleGroup002.Torso
-					|| muscle.Group == MuscleGroup002.Foot)
-					EndEffectorDistance += muscle.ObsDeltaFromAnimationPosition.sqrMagnitude;
-				RotationDistance += Mathf.Abs(muscle.ObsAngleDeltaFromAnimationRotation)/360f;
+				PositionDistance += bodyPart.ObsDeltaFromAnimationPosition.sqrMagnitude;
+				if (bodyPart.Group == BodyHelper002.BodyPartGroup.Hand // Hand is not a muscle
+					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Torso
+					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Foot)
+					EndEffectorDistance += bodyPart.ObsDeltaFromAnimationPosition.sqrMagnitude;
+				RotationDistance += Mathf.Abs(bodyPart.ObsAngleDeltaFromAnimationRotation)/360f;
 			}
 		}
 
@@ -192,63 +190,29 @@ public class StyleTransfer002Master : MonoBehaviour {
 	}
 	void CompareAnimationFrame(StyleTransfer002Animator.AnimationStep animStep)
 	{
-		var animBones = GetComponentsInChildren<Rigidbody>()
-			//.Where(x=>x.GetComponent<ConfigurableJoint>() != null)
-			//.Select(x=>x.transform)
-			.ToList();
-		foreach (var bone in animBones)
-		{
-			if (bone.name.Contains("lower_waist"))
-				animStep = animStep;
-			var i = animStep.Names.IndexOf(bone.name);
-			var muscle = Muscles.FirstOrDefault(x=>x.Name==bone.name);
-			Vector3 animPosition = transform.parent.position + animStep.Positions[i];
-			Quaternion animRotation = transform.parent.rotation * animStep.Rotaions[i];
-			// Vector3 angularVelocity = animStep.RotaionVelocities[i].eulerAngles / Time.fixedDeltaTime;
-			Vector3 angularVelocity = animStep.AngularVelocities[i] / Time.fixedDeltaTime;
-			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
-			if (!bone.useGravity)
-				velocity = angularVelocity = Vector3.zero;
-			if (muscle != null) {
-				muscle.SetAnimationPosition(
-					transform.parent.position + animStep.Positions[i], 
-					transform.parent.rotation * animStep.Rotaions[i]);
-			}
-		}
+		MimicAnimationFrame(animStep, true);
 	}
 
-	void MimicAnimationFrame(StyleTransfer002Animator.AnimationStep animStep)
+	void MimicAnimationFrame(StyleTransfer002Animator.AnimationStep animStep, bool onlySetAnimation = false)
 	{
-		var animBones = GetComponentsInChildren<Rigidbody>()
-			//.Where(x=>x.GetComponent<ConfigurableJoint>() != null)
-			//.Select(x=>x.transform)
-			.ToList();
-		foreach (var bone in animBones)
+		foreach (var bodyPart in BodyParts)
 		{
-			if (bone.name.Contains("lower_waist"))
-				animStep = animStep;
-			var i = animStep.Names.IndexOf(bone.name);
-			var muscle = Muscles.FirstOrDefault(x=>x.Name==bone.name);
-			Vector3 animPosition = transform.parent.position + animStep.Positions[i];
-			Quaternion animRotation = transform.parent.rotation * animStep.Rotaions[i];
-			// Vector3 angularVelocity = animStep.RotaionVelocities[i].eulerAngles / Time.fixedDeltaTime;
+			var i = animStep.Names.IndexOf(bodyPart.Name);
+			Vector3 animPosition = bodyPart.InitialRootPosition + animStep.Positions[0];
+            Quaternion animRotation = bodyPart.InitialRootRotation * animStep.Rotaions[0];
+			if (i != 0) {
+				animPosition += animStep.Positions[i];
+				animRotation *= animStep.Rotaions[i];
+			}
 			Vector3 angularVelocity = animStep.AngularVelocities[i] / Time.fixedDeltaTime;
 			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
-			if (!bone.useGravity)
-				velocity = angularVelocity = Vector3.zero;
+			// Vector3 angularVelocity = animStep.AngularVelocities[i];
+			// Vector3 velocity = animStep.Velocities[i];
 			// angularVelocity = Vector3.zero;
 			// velocity = Vector3.zero;
-			if (muscle == null) {
-		        bone.position = animPosition;
-        		bone.rotation = animRotation;
-        		bone.GetComponent<Rigidbody>().angularVelocity = angularVelocity;
-        		bone.GetComponent<Rigidbody>().velocity = velocity;
-			} else {
-				muscle.MoveToAnim(animPosition, animRotation, angularVelocity, velocity);
-				muscle.SetAnimationPosition(
-					transform.parent.position + animStep.Positions[i], 
-					transform.parent.rotation * animStep.Rotaions[i]);
-			}
+			if (!onlySetAnimation)
+				bodyPart.MoveToAnim(animPosition, animRotation, angularVelocity, velocity);
+			bodyPart.SetAnimationPosition(animPosition, animRotation);
 		}
 	}
 

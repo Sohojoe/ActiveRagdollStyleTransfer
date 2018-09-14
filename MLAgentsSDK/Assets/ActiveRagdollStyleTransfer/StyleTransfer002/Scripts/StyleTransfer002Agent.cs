@@ -40,26 +40,27 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		// AddVectorObs(_master.TotalDistance);
 		AddVectorObs(_master.Phase);
 
-		foreach (var muscle in _master.Muscles)
+		foreach (var bodyPart in _master.BodyParts)
 		{
-			// if(muscle.Parent == null)
-			// 	continue;
-			if (!muscle.Rigidbody.useGravity)
+			if (bodyPart.Transform.GetComponent<ConfigurableJoint>() == null)
 				continue;
-
 			// animation training
 			// AddVectorObs(muscle.ObsDeltaFromAnimationPosition);
 			// AddVectorObs(muscle.ObsNormalizedDeltaFromAnimationRotation);
 			// self observation training
 			//AddVectorObs(muscle.ObsNormalizedDeltaFromTargetRotation);
-			AddVectorObs(muscle.ObsLocalPosition);
-			AddVectorObs(muscle.ObsRotation);
+			AddVectorObs(bodyPart.ObsLocalPosition);
+			AddVectorObs(bodyPart.ObsRotation);
 			// AddVectorObs(muscle.ObsNormalizedRotation);
-			AddVectorObs(muscle.ObsRotationVelocity);
-			AddVectorObs(muscle.ObsVelocity);
+			AddVectorObs(bodyPart.ObsRotationVelocity);
+			AddVectorObs(bodyPart.ObsVelocity);
 		}
-		if (SensorIsInTouch?.Count>0)
-			AddVectorObs(SensorIsInTouch);
+		if (SensorIsInTouch?.Count>0){
+			AddVectorObs(SensorIsInTouch[0]);
+			AddVectorObs(0f);
+			AddVectorObs(SensorIsInTouch[1]);
+			AddVectorObs(0f);
+		}
 	}
 
 	public override void AgentAction(float[] vectorAction, string textAction)
@@ -188,8 +189,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 
 	public override void AgentReset()
 	{
-		_sensors = _master.Muscles
-			.Where(x=>x.Group == MuscleGroup002.Foot)
+		_sensors = _master.BodyParts
+			.Where(x=>x.Group == BodyHelper002.BodyPartGroup.Foot)
 			.Select(x=>x.Rigidbody.gameObject)
 			.ToList();
 		foreach (var sensor in _sensors)
