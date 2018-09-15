@@ -123,7 +123,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -9
+      value: -18
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -359,6 +359,34 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
   m_IsPrefabAsset: 0
+--- !u!4 &113563527 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4415029503877024, guid: d8c00fc85c8e64f7884d8fe394cb95b0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1533481060}
+--- !u!114 &122594482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b23992c8eb17439887f5e944bf04a40, type: 3}
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  broadcast: 1
+  graphModel: {fileID: 4900000, guid: 2549e0c2aeca24f439f81a567db22372, type: 3}
+  graphScope: 
+  graphPlaceholders: []
+  BatchSizePlaceholderName: batch_size
+  VectorObservationPlacholderName: vector_observation
+  RecurrentInPlaceholderName: recurrent_in
+  RecurrentOutPlaceholderName: recurrent_out
+  VisualObservationPlaceholderName: []
+  ActionPlaceholderName: action
+  PreviousActionPlaceholderName: prev_action
+  brain: {fileID: 1318491971}
 --- !u!1001 &156494547
 Prefab:
   m_ObjectHideFlags: 0
@@ -368,7 +396,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -16
+      value: -32
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -618,7 +646,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -11
+      value: -22
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -863,7 +891,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -15
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1108,7 +1136,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -5
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1243,7 +1271,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1298,7 +1326,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -10
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1679,7 +1707,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -3
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1775,22 +1803,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
   m_IsPrefabAsset: 0
---- !u!114 &738244639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41e9bda8f3cf1492fa74926a530f6f70, type: 3}
-  m_Name: (Clone)(Clone)
-  m_EditorClassIdentifier: 
-  broadcast: 1
-  keyContinuousPlayerActions: []
-  axisContinuousPlayerActions: []
-  discretePlayerActions: []
-  brain: {fileID: 0}
 --- !u!1001 &796947312
 Prefab:
   m_ObjectHideFlags: 0
@@ -1800,7 +1812,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -8
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1985,7 +1997,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -4
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2125,7 +2137,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -6
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2251,18 +2263,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
   m_IsPrefabAsset: 0
---- !u!114 &1028321679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35813a1be64e144f887d7d5f15b963fa, type: 3}
-  m_Name: (Clone)(Clone)
-  m_EditorClassIdentifier: 
-  brain: {fileID: 0}
 --- !u!1 &1116425163
 GameObject:
   m_ObjectHideFlags: 0
@@ -2352,13 +2352,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb3e52e2181b461dbdeec083f420f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1826692716}
+  target: {fileID: 113563527}
   distance: 2.125
   height: 0.2
   clampToFloor: 0
   heightDamping: 5
   rotationDamping: 0
---- !u!114 &1138443910
+--- !u!114 &1231140011
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2366,20 +2366,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b23992c8eb17439887f5e944bf04a40, type: 3}
-  m_Name: (Clone)(Clone)
+  m_Script: {fileID: 11500000, guid: 35813a1be64e144f887d7d5f15b963fa, type: 3}
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
-  broadcast: 1
-  graphModel: {fileID: 4900000, guid: 2549e0c2aeca24f439f81a567db22372, type: 3}
-  graphScope: 
-  graphPlaceholders: []
-  BatchSizePlaceholderName: batch_size
-  VectorObservationPlacholderName: vector_observation
-  RecurrentInPlaceholderName: recurrent_in
-  RecurrentOutPlaceholderName: recurrent_out
-  VisualObservationPlaceholderName: []
-  ActionPlaceholderName: action
-  PreviousActionPlaceholderName: prev_action
   brain: {fileID: 1318491971}
 --- !u!1001 &1269584391
 Prefab:
@@ -2390,7 +2379,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -12
+      value: -24
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2697,11 +2686,11 @@ MonoBehaviour:
     vectorActionSpaceType: 1
   brainType: 3
   CoreBrains:
-  - {fileID: 738244639}
-  - {fileID: 1358248996}
-  - {fileID: 1028321679}
-  - {fileID: 1138443910}
-  instanceID: 3956
+  - {fileID: 1812664414}
+  - {fileID: 1472548777}
+  - {fileID: 1231140011}
+  - {fileID: 122594482}
+  instanceID: 24536
 --- !u!114 &1318491972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2715,7 +2704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Actions: []
   ApplyRandomActions: 0
---- !u!114 &1358248996
+--- !u!114 &1472548777
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2724,7 +2713,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 943466ab374444748a364f9d6c3e2fe2, type: 3}
-  m_Name: (Clone)(Clone)
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
   broadcast: 1
   brain: {fileID: 0}
@@ -2849,7 +2838,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -13
+      value: -26
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3094,7 +3083,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -7
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3229,7 +3218,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -14
+      value: -28
       objectReference: {fileID: 0}
     - target: {fileID: 4087631722578730, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3465,11 +3454,22 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
   m_IsPrefabAsset: 0
---- !u!4 &1826692716 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4685241573679092, guid: d8c00fc85c8e64f7884d8fe394cb95b0,
-    type: 2}
-  m_PrefabInternal: {fileID: 1533481060}
+--- !u!114 &1812664414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e9bda8f3cf1492fa74926a530f6f70, type: 3}
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  broadcast: 1
+  keyContinuousPlayerActions: []
+  axisContinuousPlayerActions: []
+  discretePlayerActions: []
+  brain: {fileID: 1318491971}
 --- !u!1001 &1834294715
 Prefab:
   m_ObjectHideFlags: 0
