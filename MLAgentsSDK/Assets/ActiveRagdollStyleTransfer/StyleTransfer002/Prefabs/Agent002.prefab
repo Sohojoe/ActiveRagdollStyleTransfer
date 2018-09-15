@@ -526,7 +526,7 @@ GameObject:
   - component: {fileID: 114530653907355446}
   - component: {fileID: 114219105256738188}
   m_Layer: 0
-  m_Name: MarathonHumanoid
+  m_Name: MarathonMan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

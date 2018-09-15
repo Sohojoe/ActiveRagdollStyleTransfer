@@ -1307,10 +1307,6 @@ Prefab:
       propertyPath: m_Name
       value: Agent002 (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 1797927835166346, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f45d6c9dde9504c6bba19bc90386b6ec, type: 2}
   m_IsPrefabAsset: 0
@@ -2833,6 +2829,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1838473497065730, guid: d8c00fc85c8e64f7884d8fe394cb95b0, type: 2}
+      propertyPath: m_Name
+      value: MarathonMan
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d8c00fc85c8e64f7884d8fe394cb95b0, type: 2}
   m_IsPrefabAsset: 0
@@ -3911,6 +3911,14 @@ Prefab:
     - target: {fileID: 4516841384631482, guid: 405eaea5cae784fcc92aa3b2eab035a3, type: 2}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177737020256426, guid: 405eaea5cae784fcc92aa3b2eab035a3, type: 2}
+      propertyPath: m_Name
+      value: MarathonMan
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177737020256426, guid: 405eaea5cae784fcc92aa3b2eab035a3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 405eaea5cae784fcc92aa3b2eab035a3, type: 2}

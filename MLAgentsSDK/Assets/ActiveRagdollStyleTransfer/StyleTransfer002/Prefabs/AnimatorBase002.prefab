@@ -3882,6 +3882,7 @@ MonoBehaviour:
   IsLoopingAnimation: 0
   NormalizedTime: 0
   Lenght: 0
+  BodyParts: []
   toePositionOffset: 0.3
   toeRotationOffset: 0.7
 --- !u!114 &114273750072857510

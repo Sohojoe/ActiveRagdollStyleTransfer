@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: ea9ef9952e06440ed9fa4c6233131d04
+guid: fa0773caae34843268db7f12c1421ce5
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: abdomen_y
-    100002: butt
-    100004: //RootNode
+    100002: //RootNode
+    100004: butt
     100006: head
     100008: humanoidT
     100010: left_ankle_x
@@ -63,8 +63,8 @@ ModelImporter:
     100114: torso
     100116: upper_waist
     400000: abdomen_y
-    400002: butt
-    400004: //RootNode
+    400002: //RootNode
+    400004: butt
     400006: head
     400008: humanoidT
     400010: left_ankle_x
@@ -146,7 +146,7 @@ ModelImporter:
     4300040: right_right_foot
     4300042: right_left_foot
     4300044: RightLeg
-    7400000: DeepMindHumanoidWalking
+    7400000: MarathonManBackflip
     9500000: //RootNode
     13700000: butt
     13700002: head
@@ -200,17 +200,17 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: DeepMindHumanoidWalking
+      name: MarathonManBackflip
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 62
+      lastFrame: 129
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -258,7 +258,7 @@ ModelImporter:
     tangentImportMode: 3
     normalCalculationMode: 4
   importAnimation: 1
-  copyAvatar: 1
+  copyAvatar: 0
   humanDescription:
     serializedVersion: 2
     human:
@@ -748,8 +748,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: fa0773caae34843268db7f12c1421ce5,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 3
   humanoidOversampling: 1
   additionalBone: 0

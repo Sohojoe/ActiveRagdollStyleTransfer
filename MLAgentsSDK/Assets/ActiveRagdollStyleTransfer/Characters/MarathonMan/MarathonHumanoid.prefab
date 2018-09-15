@@ -190,12 +190,12 @@ GameObject:
   - component: {fileID: 4516841384631482}
   - component: {fileID: 114799683790066108}
   m_Layer: 0
-  m_Name: MarathonHumanoid
+  m_Name: MarathonMan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1269309546828682
 GameObject:
   m_ObjectHideFlags: 0
