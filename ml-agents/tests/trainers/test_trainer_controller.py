@@ -22,7 +22,7 @@ def dummy_start():
               "brainNames": ["RealFakeBrain"],
               "externalBrainNames": ["RealFakeBrain"],
               "logPath":"RealFakePath",
-              "apiNumber":"API-3",
+              "apiNumber":"API-5",
               "brainParameters": [{
                   "vectorObservationSize": 3,
                   "numStackedVectorObservations" : 2,
@@ -62,6 +62,7 @@ def dummy_config():
             curiosity_strength: 0.0
             curiosity_enc_size: 1
         ''')
+
 
 @pytest.fixture
 def dummy_bc_config():
