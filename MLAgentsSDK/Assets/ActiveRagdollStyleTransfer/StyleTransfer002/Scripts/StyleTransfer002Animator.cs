@@ -46,7 +46,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		public List<Vector3> Positions;
 		public List<Quaternion> Rotaions;
 		public List<string> Names;
-
+		public Vector3 CenterOfMass;
 	}
 
 	// Use this for initialization
@@ -148,19 +148,11 @@ public class StyleTransfer002Animator : MonoBehaviour {
 				animStep.RootAngles[i] = animStep.Rotaions[i].eulerAngles;
 			}
 			else {
-				Quaternion rootRotation = Quaternion.Inverse(rootBone.Transform.rotation) * bodyPart.Transform.rotation;
-				animStep.RootAngles[i] = rootRotation.eulerAngles;
+				animStep.Rotaions[i] = Quaternion.Inverse(rootBone.Transform.rotation) * bodyPart.Transform.rotation;
+				animStep.RootAngles[i] = animStep.Rotaions[i].eulerAngles;
 				animStep.Positions[i] =  bodyPart.Transform.position - rootBone.Transform.position;
-				animStep.Rotaions[i] = rootRotation;				
 			}
 			
-			// if (NormalizedTime != 0f) {
-			// 	animStep.Velocities[i] = animStep.Positions[i] - _lastPosition[i];
-			// 	animStep.RotaionVelocities[i] = JointHelper002.FromToRotation(_lastRotation[i], animStep.Rotaions[i]);
-			// 	animStep.AngularVelocities[i] = animStep.RotaionVelocities[i].eulerAngles;
-			// }
-			// _lastPosition[i] = animStep.Positions[i];
-			// _lastRotation[i] = animStep.Rotaions[i];
 			if (NormalizedTime != 0f) {
 				animStep.Velocities[i] = bodyPart.Transform.position - _lastPosition[i];
 				animStep.RotaionVelocities[i] = JointHelper002.FromToRotation(_lastRotation[i], bodyPart.Transform.rotation);
@@ -170,6 +162,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 			_lastRotation[i] = bodyPart.Transform.rotation;
 
 		}
+		animStep.CenterOfMass = GetCenterOfMass();
 		AnimationSteps.Add(animStep);
     }
 	public void BecomeAnimated()
@@ -200,7 +193,23 @@ public class StyleTransfer002Animator : MonoBehaviour {
 	protected virtual void LateUpdate() {
 		MimicAnimation();
 	}
-
+	Vector3 GetCenterOfMass()
+	{
+		var centerOfMass = Vector3.zero;
+		float totalMass = 0f;
+		var bodies = BodyParts
+			.Select(x=>x.Rigidbody)
+			.Where(x=>x!=null)
+			.ToList();
+		foreach (Rigidbody rb in bodies)
+		{
+			centerOfMass += rb.worldCenterOfMass * rb.mass;
+			totalMass += rb.mass;
+		}
+		centerOfMass /= totalMass;
+		centerOfMass -= transform.parent.position;
+		return centerOfMass;
+	}
 	public void MimicAnimation()
 	{
 		if (!anim.enabled)

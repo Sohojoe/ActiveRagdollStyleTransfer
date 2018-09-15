@@ -42,19 +42,23 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 
 		foreach (var bodyPart in _master.BodyParts)
 		{
-			if (bodyPart.Transform.GetComponent<ConfigurableJoint>() == null)
-				continue;
-			// animation training
-			// AddVectorObs(muscle.ObsDeltaFromAnimationPosition);
-			// AddVectorObs(muscle.ObsNormalizedDeltaFromAnimationRotation);
-			// self observation training
-			//AddVectorObs(muscle.ObsNormalizedDeltaFromTargetRotation);
+			// if (bodyPart.Transform.GetComponent<ConfigurableJoint>() == null)
+			// 	continue;
 			AddVectorObs(bodyPart.ObsLocalPosition);
 			AddVectorObs(bodyPart.ObsRotation);
-			// AddVectorObs(muscle.ObsNormalizedRotation);
 			AddVectorObs(bodyPart.ObsRotationVelocity);
 			AddVectorObs(bodyPart.ObsVelocity);
 		}
+		foreach (var muscle in _master.Muscles)
+		{
+			if (muscle.ConfigurableJoint.angularXMotion != ConfigurableJointMotion.Locked)
+				AddVectorObs(muscle.TargetNormalizedRotationX);
+			if (muscle.ConfigurableJoint.angularYMotion != ConfigurableJointMotion.Locked)
+				AddVectorObs(muscle.TargetNormalizedRotationY);
+			if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
+				AddVectorObs(muscle.TargetNormalizedRotationZ);
+		}
+
 		if (SensorIsInTouch?.Count>0){
 			AddVectorObs(SensorIsInTouch[0]);
 			AddVectorObs(0f);
@@ -84,9 +88,9 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		var poseReward = 1f - _master.RotationDistance;
 		var velocityReward = 1f - Mathf.Abs(_master.VelocityDistance);
 		var endEffectorReward = 1f - _master.EndEffectorDistance;
-		var centerMassReward = 0f; // TODO
+		var centerMassReward = 1f - _master.CenterOfMassDistance; // TODO
 
-		float poseRewardScale = .65f + .1f;
+		float poseRewardScale = .65f;
 		// poseRewardScale *=2;
 		float velocityRewardScale = .1f;
 		float endEffectorRewardScale = .15f;
@@ -96,6 +100,13 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		velocityReward = Mathf.Clamp(velocityReward, 0f, 1f);
 		endEffectorReward = Mathf.Clamp(endEffectorReward, 0f, 1f);
 		centerMassReward = Mathf.Clamp(centerMassReward, 0f, 1f);
+
+		int terminateSignals = 0;
+		terminateSignals += poseReward <= 0f ? 1 : 0;
+		terminateSignals += velocityReward <= 0f ? 1 : 0;
+		terminateSignals += endEffectorRewardScale <= 0f ? 1 : 0;
+		terminateSignals += centerMassReward <= 0f ? 1 : 0;
+		bool shouldTerminate = terminateSignals >= 2 ? true : false;
 
 		float distanceReward = 
 			(poseReward * poseRewardScale) +
@@ -125,18 +136,18 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 			AddReward(reward);
 		if (!IsDone()){
 			// if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
-			if (distanceReward <= 0f && !_master.DebugShowWithOffset) {
+			if (shouldTerminate && !_master.DebugShowWithOffset) {
 				AddReward(-1f);
 				Done();
 				// _master.StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
-				// if (_master.StartAnimationIndex < _muscleAnimator.AnimationSteps.Count-1)
-				// 	_master.StartAnimationIndex++;
+				if (_master.StartAnimationIndex < _styleAnimator.AnimationSteps.Count-1)
+					_master.StartAnimationIndex++;
 			}
 			if (_master.IsDone()){
 				// AddReward(1f*(float)this.GetStepCount());
 				Done();
 				// if (_master.StartAnimationIndex > 0 && distanceReward >= _master.ErrorCutoff)
-				if (_master.StartAnimationIndex > 0 && distanceReward > 0f)
+				if (_master.StartAnimationIndex > 0 && !shouldTerminate)
 				 	_master.StartAnimationIndex--;
 			}
 		}

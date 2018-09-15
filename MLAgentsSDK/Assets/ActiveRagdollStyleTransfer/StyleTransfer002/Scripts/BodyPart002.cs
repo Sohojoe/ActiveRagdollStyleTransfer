@@ -100,49 +100,92 @@ public class BodyPart002
 
     public void UpdateObservations()
     {
-        ObsRotation = this.LocalRotation;
-        ObsRotation = (ToJointSpaceInverse * UnityEngine.Quaternion.Inverse(this.LocalRotation) * this.ToJointSpaceDefault);
+        Quaternion rotation;
+        Vector3 position;
+        Vector3 angle;
+        if (this == Root) {
+            rotation = Quaternion.Inverse(InitialRootRotation) * Transform.rotation;
+            position =  Transform.position - InitialRootPosition;
+            angle = rotation.eulerAngles;
+        }
+        else {
+            rotation = Quaternion.Inverse(Root.Transform.rotation) * Transform.rotation;
+            angle = rotation.eulerAngles;
+            position =  Transform.position - Root.Transform.position;
+        }
+			// Vector3 animPosition = bodyPart.InitialRootPosition + animStep.Positions[0];
+            // Quaternion animRotation = bodyPart.InitialRootRotation * animStep.Rotaions[0];
+			// if (i != 0) {
+			// 	animPosition += animStep.Positions[i];
+			// 	animRotation *= animStep.Rotaions[i];
+			// }
         
-        var normalizedRotation = NormalizedEulerAngles(ObsRotation.eulerAngles);
+        if (_firstRunComplete == false){
+            _lastUpdateObsTime = Time.time;
+            _lastObsRotation = Transform.rotation;
+            _lastLocalPosition = Transform.position;
+        }
+
+        var dt = Time.time - _lastUpdateObsTime;
+        _lastUpdateObsTime = Time.time;
+        var velocity = Transform.position - _lastLocalPosition;
+        var rotationVelocity = JointHelper002.FromToRotation(_lastObsRotation, Transform.rotation);
+        var angularVelocity = rotationVelocity.eulerAngles;
+        _lastLocalPosition = Transform.position;
+        _lastObsRotation = Transform.rotation;
+        angularVelocity = NormalizedEulerAngles(angularVelocity);
+        angularVelocity /= 128f;
+        if (dt > 0f)
+            angularVelocity /= dt;
+        if (dt > 0f)
+            velocity /= dt;
+
+        ObsDeltaFromAnimationPosition = _animationPosition - position;
+        ObsNormalizedDeltaFromAnimationRotation = _animationRotation * Quaternion.Inverse(rotation);
+        ObsAngleDeltaFromAnimationRotation = Quaternion.Angle(_animationRotation, rotation);
+        ObsLocalPosition = position;
+        ObsRotation = rotation;
+        ObsRotationVelocity = angularVelocity;
+        ObsVelocity = velocity;
+
+        // ObsRotation = this.LocalRotation;
+        // ObsRotation = (ToJointSpaceInverse * UnityEngine.Quaternion.Inverse(this.LocalRotation) * this.ToJointSpaceDefault);
+        
+        // var normalizedRotation = NormalizedEulerAngles(ObsRotation.eulerAngles);
 
         // Debug code 
         // if (Group == BodyHelper002.BodyPartGroup.Head){
         //     var debug = 1;
         // }
 
-        if (_firstRunComplete == false){
-            _lastUpdateObsTime = Time.time;
-            _lastObsRotation = ObsRotation;
-            _lastLocalPosition = Transform.localPosition;
-        }
-        var dt = Time.time - _lastUpdateObsTime;
-        _lastUpdateObsTime = Time.time;
-        var rotationVelocity = ObsRotation.eulerAngles - _lastObsRotation.eulerAngles;
-        rotationVelocity = NormalizedEulerAngles(rotationVelocity);
-        rotationVelocity /= 128f;
-        if (dt > 0f)
-            rotationVelocity /= dt;
-        ObsRotationVelocity = rotationVelocity;
-        _lastObsRotation = ObsRotation;
-        ObsLocalPosition = Transform.position - Root.Transform.position;
-        var velocity = ObsLocalPosition - _lastLocalPosition;
-        ObsVelocity = velocity;
-        if (dt > 0f)
-            velocity /= dt;
-        _lastLocalPosition = ObsLocalPosition;
+        // var dt = Time.time - _lastUpdateObsTime;
+        // _lastUpdateObsTime = Time.time;
+        // var rotationVelocity = ObsRotation.eulerAngles - _lastObsRotation.eulerAngles;
+        // rotationVelocity = NormalizedEulerAngles(rotationVelocity);
+        // rotationVelocity /= 128f;
+        // if (dt > 0f)
+        //     rotationVelocity /= dt;
+        // ObsRotationVelocity = rotationVelocity;
+        // _lastObsRotation = ObsRotation;
+        // ObsLocalPosition = Transform.position - Root.Transform.position;
+        // var velocity = ObsLocalPosition - _lastLocalPosition;
+        // ObsVelocity = velocity;
+        // if (dt > 0f)
+        //     velocity /= dt;
+        // _lastLocalPosition = ObsLocalPosition;
 
-        ObsDeltaFromAnimationPosition = _animationPosition - Transform.position;
-        ObsNormalizedDeltaFromAnimationRotation = _animationRotation * Quaternion.Inverse(Transform.rotation);
-        ObsAngleDeltaFromAnimationRotation = Quaternion.Angle(_animationRotation, Transform.rotation);
+        // // ObsDeltaFromAnimationPosition = _animationPosition - Transform.position;
+        // // ObsNormalizedDeltaFromAnimationRotation = _animationRotation * Quaternion.Inverse(Transform.rotation);
+        // // ObsAngleDeltaFromAnimationRotation = Quaternion.Angle(_animationRotation, Transform.rotation);
 
-        // ObsNormalizedDeltaFromAnimationRotation = NormalizedEulerAngles(obsDeltaFromAnimationRotation.eulerAngles);
+        // // ObsNormalizedDeltaFromAnimationRotation = NormalizedEulerAngles(obsDeltaFromAnimationRotation.eulerAngles);
         if (_firstRunComplete == false){
             ObsDeltaFromAnimationPosition = Vector3.zero;
             ObsNormalizedDeltaFromAnimationRotation = new Quaternion(0,0,0,0);
             ObsAngleDeltaFromAnimationRotation = 0f;
         }
 
-        DebugMaxRotationVelocity = Vector3Max(DebugMaxRotationVelocity, rotationVelocity);
+        DebugMaxRotationVelocity = Vector3Max(DebugMaxRotationVelocity, angularVelocity);
         DebugMaxVelocity = Vector3Max(DebugMaxVelocity, velocity);
 
         _firstRunComplete = true;

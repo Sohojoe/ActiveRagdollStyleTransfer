@@ -14,6 +14,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public float EndEffectorDistance; // feet and hands
 	public float RotationDistance;
 	public float VelocityDistance;
+	public float CenterOfMassDistance;
 	public Vector3 CenterOfMass;
 	public bool IgnorRewardUntilObservation;
 	public float ErrorCutoff;
@@ -133,6 +134,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		EndEffectorDistance = 0f;
 		RotationDistance = 0f;
 		VelocityDistance = 0f;
+		CenterOfMassDistance = 0f;
 		if (_phaseIsRunning && DebugShowWithOffset)
 			MimicAnimationFrame(debugAnimStep);
 		else if (_phaseIsRunning)
@@ -155,11 +157,15 @@ public class StyleTransfer002Master : MonoBehaviour {
 					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Torso
 					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Foot)
 					EndEffectorDistance += bodyPart.ObsDeltaFromAnimationPosition.sqrMagnitude;
-				RotationDistance += Mathf.Abs(bodyPart.ObsAngleDeltaFromAnimationRotation)/360f;
+				var rotDistance = Mathf.Abs(bodyPart.ObsAngleDeltaFromAnimationRotation)/180f;
+				var squareRotDistance = Mathf.Pow(rotDistance,2);
+				RotationDistance += squareRotDistance;
 			}
 		}
-
+		// RotationDistance *= RotationDistance; // take the square;
 		CenterOfMass = GetCenterOfMass();
+		if (_phaseIsRunning)
+			CenterOfMassDistance = (animStep.CenterOfMass - CenterOfMass).magnitude;
 		var velocity = CenterOfMass-_lastCenterOfMass;
 		if (_fakeVelocity)
 			velocity = animStep.Velocity;
@@ -206,13 +212,9 @@ public class StyleTransfer002Master : MonoBehaviour {
 			}
 			Vector3 angularVelocity = animStep.AngularVelocities[i] / Time.fixedDeltaTime;
 			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
-			// Vector3 angularVelocity = animStep.AngularVelocities[i];
-			// Vector3 velocity = animStep.Velocities[i];
-			// angularVelocity = Vector3.zero;
-			// velocity = Vector3.zero;
 			if (!onlySetAnimation)
 				bodyPart.MoveToAnim(animPosition, animRotation, angularVelocity, velocity);
-			bodyPart.SetAnimationPosition(animPosition, animRotation);
+			bodyPart.SetAnimationPosition(animStep.Positions[i], animStep.Rotaions[i]);
 		}
 	}
 
@@ -294,6 +296,8 @@ public class StyleTransfer002Master : MonoBehaviour {
 		_fakeVelocity = true;
 		foreach (var muscle in Muscles)
 			muscle.Init();
+		foreach (var bodyPart in BodyParts)
+			bodyPart.Init();
 		MimicAnimationFrame(animStep);
 		EpisodeAnimationIndex = AnimationIndex;
 	}
@@ -302,13 +306,17 @@ public class StyleTransfer002Master : MonoBehaviour {
 	{
 		var centerOfMass = Vector3.zero;
 		float totalMass = 0f;
-		foreach (Rigidbody rb in Muscles.Select(x=>x.Rigidbody))
+		var bodies = BodyParts
+			.Select(x=>x.Rigidbody)
+			.Where(x=>x!=null)
+			.ToList();
+		foreach (Rigidbody rb in bodies)
 		{
 			centerOfMass += rb.worldCenterOfMass * rb.mass;
 			totalMass += rb.mass;
 		}
 		centerOfMass /= totalMass;
-		centerOfMass -= transform.position;
+		centerOfMass -= transform.parent.position;
 		return centerOfMass;
 	}
 

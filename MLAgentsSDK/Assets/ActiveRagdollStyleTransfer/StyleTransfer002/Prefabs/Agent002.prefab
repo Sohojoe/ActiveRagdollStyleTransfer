@@ -2223,10 +2223,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizeAnimator: 1
   Muscles: []
+  BodyParts: []
   PositionDistance: 0
   EndEffectorDistance: 0
   RotationDistance: 0
   VelocityDistance: 0
+  CenterOfMassDistance: 0
   CenterOfMass: {x: 0, y: 0, z: 0}
   IgnorRewardUntilObservation: 0
   ErrorCutoff: 0
