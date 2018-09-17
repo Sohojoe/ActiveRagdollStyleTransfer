@@ -67,7 +67,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 			if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
 				AddVectorObs(muscle.TargetNormalizedRotationZ);
 		}
-		if (false){
+		if (true){
 			// temp hack to support old models
 			if (SensorIsInTouch?.Count>0){
 				AddVectorObs(SensorIsInTouch[0]);
