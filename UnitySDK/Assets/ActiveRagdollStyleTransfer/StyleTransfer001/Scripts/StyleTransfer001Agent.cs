@@ -196,10 +196,9 @@ public class StyleTransfer001Agent : Agent, IOnSensorCollision {
 			_master.ResetPhase();
 	}
 
-	public void OnSensorCollisionEnter(Collider sensorCollider, Collision other) {
-			if (string.Compare(other.gameObject.name, "Terrain", true) !=0)
+	public void OnSensorCollisionEnter(Collider sensorCollider, GameObject other) {
+			if (string.Compare(other.name, "Terrain", true) !=0)
                 return;
-			var otherGameobject = other.gameObject;
             var sensor = _sensors
                 .FirstOrDefault(x=>x == sensorCollider.gameObject);
             if (sensor != null) {
@@ -207,11 +206,10 @@ public class StyleTransfer001Agent : Agent, IOnSensorCollision {
                 SensorIsInTouch[idx] = 1f;
             }
 		}
-        public void OnSensorCollisionExit(Collider sensorCollider, Collision other)
+        public void OnSensorCollisionExit(Collider sensorCollider, GameObject other)
         {
-            if (string.Compare(other.gameObject.name, "Terrain", true) !=0)
+            if (string.Compare(other.name, "Terrain", true) !=0)
                 return;
-			var otherGameobject = other.gameObject;
             var sensor = _sensors
                 .FirstOrDefault(x=>x == sensorCollider.gameObject);
             if (sensor != null) {

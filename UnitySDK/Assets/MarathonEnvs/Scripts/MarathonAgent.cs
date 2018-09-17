@@ -599,11 +599,10 @@ namespace MLAgents
             }
         }
 
-        public void OnSensorCollisionEnter(Collider sensorCollider, Collision other)
+        public void OnSensorCollisionEnter(Collider sensorCollider, GameObject other)
         {
-            if (string.Compare(other.gameObject.name, "Terrain", true) != 0)
+            if (string.Compare(other.name, "Terrain", true) != 0)
                 return;
-            var otherGameobject = other.gameObject;
             var sensor = MarathonSensors
                 .FirstOrDefault(x => x.SiteObject == sensorCollider);
             if (sensor != null)
@@ -613,11 +612,10 @@ namespace MLAgents
             }
         }
 
-        public void OnSensorCollisionExit(Collider sensorCollider, Collision other)
+        public void OnSensorCollisionExit(Collider sensorCollider, GameObject other)
         {
-            if (string.Compare(other.gameObject.name, "Terrain", true) != 0)
+            if (string.Compare(other.name, "Terrain", true) != 0)
                 return;
-            var otherGameobject = other.gameObject;
             var sensor = MarathonSensors
                 .FirstOrDefault(x => x.SiteObject == sensorCollider);
             if (sensor != null)

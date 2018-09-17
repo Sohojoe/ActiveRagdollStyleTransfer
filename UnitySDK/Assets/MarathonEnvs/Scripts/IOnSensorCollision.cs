@@ -4,8 +4,8 @@ namespace MLAgents
 {
     public interface IOnSensorCollision
     {
-         void OnSensorCollisionEnter(Collider sensorCollider, Collision other);
-         void OnSensorCollisionExit(Collider sensorCollider, Collision other);
+         void OnSensorCollisionEnter(Collider sensorCollider, GameObject other);
+         void OnSensorCollisionExit(Collider sensorCollider, GameObject other);
 
     }
 }

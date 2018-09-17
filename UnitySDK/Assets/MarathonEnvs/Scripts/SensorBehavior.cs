@@ -16,13 +16,23 @@ namespace MLAgents
         void OnCollisionEnter(Collision other)
         {
             if (_onSensorCollision != null)
-                _onSensorCollision.OnSensorCollisionEnter(_collider, other);
+                _onSensorCollision.OnSensorCollisionEnter(_collider, other.gameObject);
         }
 
         void OnCollisionExit(Collision other)
         {
             if (_onSensorCollision != null)
-                _onSensorCollision.OnSensorCollisionExit(_collider, other);
+                _onSensorCollision.OnSensorCollisionExit(_collider, other.gameObject);
+        }
+        void OnTriggerEnter(Collider other)
+        {
+            if (_onSensorCollision != null)
+                _onSensorCollision.OnSensorCollisionEnter(_collider, other.gameObject);
+        }
+        void OnTriggerExit(Collider other)
+        {
+            if (_onSensorCollision != null)
+                _onSensorCollision.OnSensorCollisionExit(_collider, other.gameObject);
         }
     }
 }

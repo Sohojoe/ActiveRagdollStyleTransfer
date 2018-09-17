@@ -8,14 +8,23 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public float FixedDeltaTime = 0.005f;
 	public bool visualizeAnimator = true;
 
+	// general observations
 	public List<Muscle002> Muscles;
 	public List<BodyPart002> BodyParts;
+	public float ObsPhase;
+	public Vector3 ObsCenterOfMass;
+	public Vector3 ObsVelocity;
+
+	// model observations
+	// i.e. model = difference between mocap and actual)
+	// ideally we dont want to generate model at inference
 	public float PositionDistance;
-	public float EndEffectorDistance; // feet and hands
+	public float EndEffectorDistance; // feet, hands, head
 	public float RotationDistance;
 	public float VelocityDistance;
 	public float CenterOfMassDistance;
-	public Vector3 CenterOfMass;
+
+	// debug variables
 	public bool IgnorRewardUntilObservation;
 	public float ErrorCutoff;
 	public bool DebugShowWithOffset;
@@ -24,7 +33,6 @@ public class StyleTransfer002Master : MonoBehaviour {
     [Range(-100,100)]
 	public int DebugAnimOffset;
 
-	public float Phase;
 
 	public float TimeStep;
 	public int AnimationIndex;
@@ -78,13 +86,15 @@ public class StyleTransfer002Master : MonoBehaviour {
 		var ragDoll = GetComponent<RagDoll002>();
 		foreach (var m in muscles)
 		{
+			var maximumForce = new Vector3(ragDoll.MusclePowers.First(x=>x.Muscle == m.name).Power,0,0);
+			maximumForce *= 3f;
 			var muscle = new Muscle002{
 				Rigidbody = m.GetComponent<Rigidbody>(),
 				Transform = m.GetComponent<Transform>(),
 				ConfigurableJoint = m,
 				Name = m.name,
 				Group = BodyHelper002.GetMuscleGroup(m.name),
-				MaximumForce = new Vector3(ragDoll.MusclePowers.First(x=>x.Muscle == m.name).Power,0,0)
+				MaximumForce = maximumForce
 			};
 			if (muscle.Group == BodyHelper002.MuscleGroup.Hips)
 				rootConfigurableJoint = muscle.ConfigurableJoint;
@@ -165,20 +175,20 @@ public class StyleTransfer002Master : MonoBehaviour {
 			}
 		}
 		// RotationDistance *= RotationDistance; // take the square;
-		CenterOfMass = GetCenterOfMass();
+		ObsCenterOfMass = GetCenterOfMass();
 		if (_phaseIsRunning)
-			CenterOfMassDistance = (animStep.CenterOfMass - CenterOfMass).magnitude;
-		var velocity = CenterOfMass-_lastCenterOfMass;
+			CenterOfMassDistance = (animStep.CenterOfMass - ObsCenterOfMass).magnitude;
+		ObsVelocity = ObsCenterOfMass-_lastCenterOfMass;
 		if (_fakeVelocity)
-			velocity = animStep.Velocity;
-		_lastCenterOfMass = CenterOfMass;
+			ObsVelocity = animStep.Velocity;
+		_lastCenterOfMass = ObsCenterOfMass;
 		if (!_resetCenterOfMassOnLastUpdate)
 			_fakeVelocity = false;
 
 		if (_phaseIsRunning){
 			var animVelocity = animStep.Velocity / Time.fixedDeltaTime;
-			velocity /= Time.fixedDeltaTime;
-			var velocityDistance = velocity-animVelocity;
+			ObsVelocity /= Time.fixedDeltaTime;
+			var velocityDistance = ObsVelocity-animVelocity;
 			VelocityDistance = velocityDistance.sqrMagnitude;
 		}
 
@@ -193,7 +203,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 				Done();
 				AnimationIndex--;
 			}
-			Phase = _muscleAnimator.AnimationSteps[AnimationIndex].NormalizedTime % 1f;
+			ObsPhase = _muscleAnimator.AnimationSteps[AnimationIndex].NormalizedTime % 1f;
 		}
 	}
 	void CompareAnimationFrame(StyleTransfer002Animator.AnimationStep animStep)
@@ -222,8 +232,8 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	protected virtual void LateUpdate() {
 		if (_resetCenterOfMassOnLastUpdate){
-			CenterOfMass = GetCenterOfMass();
-			_lastCenterOfMass = CenterOfMass;
+			ObsCenterOfMass = GetCenterOfMass();
+			_lastCenterOfMass = ObsCenterOfMass;
 			_resetCenterOfMassOnLastUpdate = false;
 		}
 		#if UNITY_EDITOR
