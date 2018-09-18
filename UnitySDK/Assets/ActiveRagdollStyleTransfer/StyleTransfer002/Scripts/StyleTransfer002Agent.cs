@@ -14,10 +14,13 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 
 	public bool ShowMonitor = false;
 
+	static int _startCount;
+
 	// Use this for initialization
 	void Start () {
 		_master = GetComponent<StyleTransfer002Master>();
 		_styleAnimator = FindObjectOfType<StyleTransfer002Animator>();
+		_startCount++;
 	}
 	
 	// Update is called once per frame
@@ -141,7 +144,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 			// - effortPenality +
 			- jointsAtLimitPenality;
 
-        if (ShowMonitor) {
+		// HACK _startCount used as Monitor does not like reset
+        if (ShowMonitor && _startCount < 2) {
             var hist = new []{
                 reward,
 				distanceReward,
