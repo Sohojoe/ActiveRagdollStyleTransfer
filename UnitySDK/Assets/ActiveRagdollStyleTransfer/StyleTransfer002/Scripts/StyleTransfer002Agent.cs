@@ -133,6 +133,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		terminateSignals += endEffectorRewardScale <= -1f ? 1 : 0;
 		terminateSignals += centerMassReward <= -1f ? 1 : 0;
 		bool shouldTerminate = terminateSignals >= 2 ? true : false;
+		if (_master.IsInferenceMode)
+			shouldTerminate = false;
 
 		float distanceReward = 
 			(poseReward * poseRewardScale) +

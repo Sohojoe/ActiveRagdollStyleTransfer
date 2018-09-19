@@ -38,7 +38,8 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public int AnimationIndex;
 	public int EpisodeAnimationIndex;
 	public int StartAnimationIndex;
-	public bool UseRandomIndex;
+	public bool UseRandomIndexForTraining;
+	public bool UseRandomIndexForInference;
 	public bool CameraFollowMe;
 	public Transform CameraTarget;
 
@@ -51,6 +52,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	private StyleTransfer002Animator _muscleAnimator;
 	private Brain _brain;
+	public bool IsInferenceMode;
 	bool _phaseIsRunning;
 	Random _random = new Random();
 	Vector3 _lastCenterOfMass;
@@ -105,11 +107,23 @@ public class StyleTransfer002Master : MonoBehaviour {
 		}
 		_muscleAnimator = FindObjectOfType<StyleTransfer002Animator>();
 		_brain = FindObjectOfType<Brain>();
+		switch (_brain.brainType)
+		{
+			case BrainType.External:
+				IsInferenceMode = false;
+				break;
+			case BrainType.Player:
+			case BrainType.Internal:
+			case BrainType.Heuristic:
+				IsInferenceMode = true;
+				break;
+			default:
+				throw new System.NotImplementedException();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
 	}
 	static float SumAbs(Vector3 vector)
 	{
@@ -205,6 +219,14 @@ public class StyleTransfer002Master : MonoBehaviour {
 			}
 			ObsPhase = _muscleAnimator.AnimationSteps[AnimationIndex].NormalizedTime % 1f;
 		}
+		if (_phaseIsRunning && IsInferenceMode && CameraFollowMe)
+		{
+			_muscleAnimator.anim.enabled = true;
+			_muscleAnimator.anim.Play("Record",0, animStep.NormalizedTime);
+			_muscleAnimator.anim.transform.position = animStep.TransformPosition;
+			_muscleAnimator.anim.transform.rotation = animStep.TransformRotation;
+		}
+
 	}
 	void CompareAnimationFrame(StyleTransfer002Animator.AnimationStep animStep)
 	{
@@ -255,9 +277,6 @@ public class StyleTransfer002Master : MonoBehaviour {
 		// _animationIndex =  UnityEngine.Random.Range(0, _muscleAnimator.AnimationSteps.Count);
 		if (!_phaseIsRunning){
 			StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
-			// StartAnimationIndex = 0;
-			// ErrorCutoff = .25f;
-			// ErrorCutoff = -10f;
 			EpisodeAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
 			AnimationIndex = EpisodeAnimationIndex;
 			if (CameraFollowMe){
@@ -270,7 +289,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		// ErrorCutoff = UnityEngine.Random.Range(-10f, 1f);
 		// ErrorCutoff = UnityEngine.Random.Range(-5f, 1f);
 		ErrorCutoff = UnityEngine.Random.Range(-3f, .5f);
-		if (_brain.brainType == BrainType.Internal)
+		if (IsInferenceMode)
 			ErrorCutoff = UnityEngine.Random.Range(-3f, -3f);
 		var lastLenght = AnimationIndex - EpisodeAnimationIndex;
 		if (lastLenght >=  _muscleAnimator.AnimationSteps.Count-2){
@@ -281,10 +300,11 @@ public class StyleTransfer002Master : MonoBehaviour {
 			AnimationIndex = EpisodeAnimationIndex;
 		}
 
-		if (UseRandomIndex) {
-			int idx = UnityEngine.Random.Range(0, _muscleAnimator.AnimationSteps.Count);
-			AnimationIndex = idx;
-		} else {
+		// start with random
+		AnimationIndex = UnityEngine.Random.Range(0, _muscleAnimator.AnimationSteps.Count);
+		if (IsInferenceMode && !UseRandomIndexForInference){
+			AnimationIndex = 1;
+		} else if (!IsInferenceMode && !UseRandomIndexForTraining) {
 			var minIdx = StartAnimationIndex;
 			if (_muscleAnimator.IsLoopingAnimation)
 				minIdx = minIdx == 0 ? 1 : minIdx;

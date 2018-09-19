@@ -47,6 +47,8 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		public List<Quaternion> Rotaions;
 		public List<string> Names;
 		public Vector3 CenterOfMass;
+		public Vector3 TransformPosition;
+		public Quaternion TransformRotation;
 	}
 
 	// Use this for initialization
@@ -93,6 +95,10 @@ public class StyleTransfer002Animator : MonoBehaviour {
 	}
 	
 	void FixedUpdate () {
+		if (AnimationStepsReady){
+			MimicAnimation();
+			return;
+		}
 		if (_lastPosition == null)
 			Reset();
 		AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -106,7 +112,8 @@ public class StyleTransfer002Animator : MonoBehaviour {
 			endTime = 3f;
 		if (NormalizedTime <= endTime) {
 			MimicAnimation();
-			UpdateAnimationStep(timeStep);
+			if (!AnimationStepsReady)
+				UpdateAnimationStep(timeStep);
 		}
 		else {
 			StopAnimation();
@@ -163,6 +170,8 @@ public class StyleTransfer002Animator : MonoBehaviour {
 
 		}
 		animStep.CenterOfMass = GetCenterOfMass();
+		animStep.TransformPosition = transform.position;
+		animStep.TransformRotation = transform.rotation;
 		AnimationSteps.Add(animStep);
     }
 	public void BecomeAnimated()

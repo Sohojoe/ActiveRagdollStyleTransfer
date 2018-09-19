@@ -2526,9 +2526,11 @@ MonoBehaviour:
   AnimationIndex: 0
   EpisodeAnimationIndex: 0
   StartAnimationIndex: 0
-  UseRandomIndex: 1
+  UseRandomIndexForTraining: 1
+  UseRandomIndexForInference: 0
   CameraFollowMe: 0
   CameraTarget: {fileID: 4931074874521446}
+  IsInferenceMode: 0
 --- !u!114 &114566654683660582
 MonoBehaviour:
   m_ObjectHideFlags: 1
