@@ -26,9 +26,10 @@ LearnFromMocapBrain:
     num_epoch: 3
     beta: 0.01
     time_horizon: 1000
-    max_steps: 2e6
+    max_steps: 1e6
     batch_size: 2048
-    buffer_size: 20480
+    buffer_size: 10240
+    # buffer_size: 20480
     summary_freq: 1000
     num_layers: 2
     hidden_units: 512
