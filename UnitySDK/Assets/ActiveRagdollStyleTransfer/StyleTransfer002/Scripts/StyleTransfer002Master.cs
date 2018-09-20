@@ -89,7 +89,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		foreach (var m in muscles)
 		{
 			var maximumForce = new Vector3(ragDoll.MusclePowers.First(x=>x.Muscle == m.name).Power,0,0);
-			maximumForce *= 3f;
+			// maximumForce *= 2f;
 			var muscle = new Muscle002{
 				Rigidbody = m.GetComponent<Rigidbody>(),
 				Transform = m.GetComponent<Transform>(),
