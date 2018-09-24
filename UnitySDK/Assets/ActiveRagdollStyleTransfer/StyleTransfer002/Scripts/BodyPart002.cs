@@ -14,6 +14,7 @@ public class BodyPart002
 
     public Vector3 ObsLocalPosition;
     public Quaternion ObsRotation;
+    public Quaternion ObsRotationFromBase;
     // public Vector3 ObsNormalizedRotation;
     // public Vector3 ObsNormalizedDeltaFromTargetRotation;
     public Vector3 ObsRotationVelocity;
@@ -35,6 +36,11 @@ public class BodyPart002
     public BodyPart002 Root;
     public Quaternion InitialRootRotation;
     public Vector3 InitialRootPosition;
+
+    // base = from where to measure rotation and position from
+    public Quaternion BaseRotation;
+    public Vector3 BasePosition;
+
 
     Quaternion _lastObsRotation;
     Vector3 _lastLocalPosition;
@@ -83,6 +89,8 @@ public class BodyPart002
 			
             InitialRootRotation = Root.Transform.transform.rotation;
             InitialRootPosition = Root.Transform.transform.position;
+            BaseRotation = Root.Transform.transform.rotation;
+            BasePosition = Root.Transform.transform.position;
 
 			DefaultLocalRotation = LocalRotation;
 			// Vector3 forward = Vector3.Cross (ConfigurableJoint.axis, ConfigurableJoint.secondaryAxis).normalized;
@@ -101,6 +109,7 @@ public class BodyPart002
     public void UpdateObservations()
     {
         Quaternion rotation;
+        Quaternion rotationFromBase;
         Vector3 position;
         Vector3 angle;
         if (this == Root) {
@@ -113,6 +122,7 @@ public class BodyPart002
             angle = rotation.eulerAngles;
             position =  Transform.position - Root.Transform.position;
         }
+        rotationFromBase = Quaternion.Inverse(BaseRotation) * Transform.rotation;
 			// Vector3 animPosition = bodyPart.InitialRootPosition + animStep.Positions[0];
             // Quaternion animRotation = bodyPart.InitialRootRotation * animStep.Rotaions[0];
 			// if (i != 0) {
@@ -141,10 +151,11 @@ public class BodyPart002
             velocity /= dt;
 
         ObsDeltaFromAnimationPosition = _animationPosition - position;
-        ObsNormalizedDeltaFromAnimationRotation = _animationRotation * Quaternion.Inverse(rotation);
-        ObsAngleDeltaFromAnimationRotation = Quaternion.Angle(_animationRotation, rotation);
+        ObsNormalizedDeltaFromAnimationRotation = _animationRotation * Quaternion.Inverse(rotationFromBase);
+        ObsAngleDeltaFromAnimationRotation = Mathf.Abs(Quaternion.Angle(_animationRotation, rotationFromBase)/180f);
         ObsLocalPosition = position;
         ObsRotation = rotation;
+        ObsRotationFromBase = rotationFromBase;
         ObsRotationVelocity = angularVelocity;
         ObsVelocity = velocity;
 

@@ -20,6 +20,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	// ideally we dont want to generate model at inference
 	public float PositionDistance;
 	public float EndEffectorDistance; // feet, hands, head
+	public float FeetRotationDistance; // feet, hands, head
 	public float RotationDistance;
 	public float VelocityDistance;
 	public float CenterOfMassDistance;
@@ -158,6 +159,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		}
 		PositionDistance = 0f;
 		EndEffectorDistance = 0f;
+		FeetRotationDistance = 0f;
 		RotationDistance = 0f;
 		VelocityDistance = 0f;
 		CenterOfMassDistance = 0f;
@@ -176,22 +178,34 @@ public class StyleTransfer002Master : MonoBehaviour {
 		}
 		foreach (var bodyPart in BodyParts)
 		{
-			bodyPart.UpdateObservations();
 			if (_phaseIsRunning){
+				bodyPart.UpdateObservations();
 				PositionDistance += bodyPart.ObsDeltaFromAnimationPosition.sqrMagnitude;
-				if (bodyPart.Group == BodyHelper002.BodyPartGroup.Hand // Hand is not a muscle
-					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Torso
-					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Foot)
-					EndEffectorDistance += bodyPart.ObsDeltaFromAnimationPosition.sqrMagnitude;
-				var rotDistance = Mathf.Abs(bodyPart.ObsAngleDeltaFromAnimationRotation)/180f;
+				// PositionDistance += bodyPart.ObsDeltaFromAnimationPosition.magnitude;
+				
+				var rotDistance = bodyPart.ObsAngleDeltaFromAnimationRotation;
 				var squareRotDistance = Mathf.Pow(rotDistance,2);
 				RotationDistance += squareRotDistance;
+				// RotationDistance += rotDistance;
+				if (bodyPart.Group == BodyHelper002.BodyPartGroup.Hand
+					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Torso
+					|| bodyPart.Group == BodyHelper002.BodyPartGroup.Foot)
+				{
+					EndEffectorDistance += bodyPart.ObsDeltaFromAnimationPosition.sqrMagnitude;
+					// EndEffectorDistance += bodyPart.ObsDeltaFromAnimationPosition.magnitude;
+				}
+				if (bodyPart.Group == BodyHelper002.BodyPartGroup.Foot)
+				{
+					FeetRotationDistance += squareRotDistance;
+					// EndEffectorRotDistance += rotDistance;
+				}
 			}
 		}
+
 		// RotationDistance *= RotationDistance; // take the square;
 		ObsCenterOfMass = GetCenterOfMass();
 		if (_phaseIsRunning)
-			CenterOfMassDistance = (animStep.CenterOfMass - ObsCenterOfMass).magnitude;
+			CenterOfMassDistance = (animStep.CenterOfMass - ObsCenterOfMass).sqrMagnitude;
 		ObsVelocity = ObsCenterOfMass-_lastCenterOfMass;
 		if (_fakeVelocity)
 			ObsVelocity = animStep.Velocity;
@@ -205,6 +219,10 @@ public class StyleTransfer002Master : MonoBehaviour {
 			var velocityDistance = ObsVelocity-animVelocity;
 			VelocityDistance = velocityDistance.sqrMagnitude;
 		}
+		// normalize distances
+		// VelocityDistance /= 10f;
+		VelocityDistance = Mathf.Clamp(VelocityDistance, -1f, 1f);
+		// CenterOfMassDistance
 
 		if (IgnorRewardUntilObservation)
 			IgnorRewardUntilObservation = false;
@@ -321,6 +339,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		TimeStep = animStep.TimeStep;
 		PositionDistance = 0f;
 		EndEffectorDistance = 0f;
+		FeetRotationDistance = 0f;
 		RotationDistance = 0f;
 		VelocityDistance = 0f;
 		IgnorRewardUntilObservation = true;

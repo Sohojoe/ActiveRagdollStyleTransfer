@@ -22,7 +22,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 	// public string animName = "0008_Skipping002";
 	private bool _isRagDoll;
 
-	Quaternion _initialBaseRotation;
+	Quaternion _baseRotation;
 	List<Quaternion> _initialRotations;
 
 	public List<BodyPart002> BodyParts;
@@ -58,7 +58,11 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		anim.Update(0f);
 		// _master = FindObjectOfType<StyleTransfer002Master>();
 		AnimationSteps = new List<AnimationStep>();
-		_initialBaseRotation = transform.rotation;
+
+		_baseRotation = 
+			GetComponentsInChildren<Transform>()
+			.First(x=> BodyHelper002.GetBodyPartGroup(x.name) == BodyHelper002.BodyPartGroup.Hips)
+			.rotation;
 	}
 	void Reset()
 	{
@@ -150,12 +154,12 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		{
 			var i = BodyParts.IndexOf(bodyPart);
 			if (i ==0) {
-				animStep.Rotaions[i] = Quaternion.Inverse(bodyPart.InitialRootRotation) * bodyPart.Transform.rotation;
+				animStep.Rotaions[i] = Quaternion.Inverse(_baseRotation) * bodyPart.Transform.rotation;
 				animStep.Positions[i] =  bodyPart.Transform.position - bodyPart.InitialRootPosition;
 				animStep.RootAngles[i] = animStep.Rotaions[i].eulerAngles;
 			}
 			else {
-				animStep.Rotaions[i] = Quaternion.Inverse(rootBone.Transform.rotation) * bodyPart.Transform.rotation;
+				animStep.Rotaions[i] = Quaternion.Inverse(_baseRotation) * bodyPart.Transform.rotation;
 				animStep.RootAngles[i] = animStep.Rotaions[i].eulerAngles;
 				animStep.Positions[i] =  bodyPart.Transform.position - rootBone.Transform.position;
 			}

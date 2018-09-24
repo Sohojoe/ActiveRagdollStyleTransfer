@@ -4,7 +4,7 @@ using UnityEngine;
 using MLAgents;
 using System.Linq;
 
-public class StyleTransfer002Agent : Agent, IOnSensorCollision {
+public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollision {
 
 	public List<float> SensorIsInTouch;
 	StyleTransfer002Master _master;
@@ -106,40 +106,40 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		var poseReward = 1f - _master.RotationDistance;
 		var velocityReward = 1f - Mathf.Abs(_master.VelocityDistance);
 		var endEffectorReward = 1f - _master.EndEffectorDistance;
+		var feetPoseReward = 1f - _master.FeetRotationDistance;
 		var centerMassReward = 1f - _master.CenterOfMassDistance; // TODO
 
 		float poseRewardScale = .65f;
 		// poseRewardScale *=2;
 		float velocityRewardScale = .1f;
 		float endEffectorRewardScale = .15f;
+		float feetRewardScale = .15f;
 		float centerMassRewardScale = .1f;
 
-		// poseReward = Mathf.Clamp(poseReward, 0f, 1f);
-		// velocityReward = Mathf.Clamp(velocityReward, 0f, 1f);
-		// endEffectorReward = Mathf.Clamp(endEffectorReward, 0f, 1f);
-		// centerMassReward = Mathf.Clamp(centerMassReward, 0f, 1f);
 		poseReward = Mathf.Clamp(poseReward, -1f, 1f);
 		velocityReward = Mathf.Clamp(velocityReward, -1f, 1f);
 		endEffectorReward = Mathf.Clamp(endEffectorReward, -1f, 1f);
 		centerMassReward = Mathf.Clamp(centerMassReward, -1f, 1f);
+		feetRewardScale = Mathf.Clamp(feetRewardScale, -1f, 1f);
 
-		int terminateSignals = 0;
-		// terminateSignals += poseReward <= 0f ? 1 : 0;
-		// terminateSignals += velocityReward <= 0f ? 1 : 0;
-		// terminateSignals += endEffectorRewardScale <= 0f ? 1 : 0;
-		// terminateSignals += centerMassReward <= 0f ? 1 : 0;
-		terminateSignals += poseReward <= -1f ? 1 : 0;
-		terminateSignals += velocityReward <= -1f ? 1 : 0;
-		terminateSignals += endEffectorRewardScale <= -1f ? 1 : 0;
-		terminateSignals += centerMassReward <= -1f ? 1 : 0;
-		bool shouldTerminate = terminateSignals >= 2 ? true : false;
-		if (_master.IsInferenceMode)
-			shouldTerminate = false;
+		// int terminateSignals = 0;
+		// // terminateSignals += poseReward <= 0f ? 1 : 0;
+		// // terminateSignals += velocityReward <= 0f ? 1 : 0;
+		// // terminateSignals += endEffectorRewardScale <= 0f ? 1 : 0;
+		// // terminateSignals += centerMassReward <= 0f ? 1 : 0;
+		// terminateSignals += poseReward <= -1f ? 1 : 0;
+		// terminateSignals += velocityReward <= -1f ? 1 : 0;
+		// terminateSignals += endEffectorRewardScale <= -1f ? 1 : 0;
+		// terminateSignals += centerMassReward <= -1f ? 1 : 0;
+		// bool shouldTerminate = terminateSignals >= 2 ? true : false;
+		// if (_master.IsInferenceMode)
+		// 	shouldTerminate = false;
 
 		float distanceReward = 
 			(poseReward * poseRewardScale) +
 			(velocityReward * velocityRewardScale) +
 			(endEffectorReward * endEffectorRewardScale) +
+			(feetPoseReward * feetRewardScale) +
 			(centerMassReward * centerMassRewardScale);
 		float reward = 
 			distanceReward
@@ -156,6 +156,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 				(poseReward * poseRewardScale),
 				(velocityReward * velocityRewardScale),
 				(endEffectorReward * endEffectorRewardScale),
+				(feetPoseReward * feetRewardScale),
 				(centerMassReward * centerMassRewardScale),
 				}.ToList();
             Monitor.Log("rewardHist", hist.ToArray());
@@ -164,20 +165,21 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		if (!_master.IgnorRewardUntilObservation)
 			AddReward(reward);
 		if (!IsDone()){
-			// if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
-			if (shouldTerminate && !_master.DebugShowWithOffset) {
-				AddReward(-10f);
-				Done();
-				// _master.StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
-				if (_master.StartAnimationIndex < _styleAnimator.AnimationSteps.Count-1)
-					_master.StartAnimationIndex++;
-			}
+			// // if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
+			// if (shouldTerminate && !_master.DebugShowWithOffset) {
+			// 	AddReward(-10f);
+			// 	Done();
+			// 	// _master.StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
+			// 	if (_master.StartAnimationIndex < _styleAnimator.AnimationSteps.Count-1)
+			// 		_master.StartAnimationIndex++;
+			// }
 			if (_master.IsDone()){
 				// AddReward(1f*(float)this.GetStepCount());
-				AddReward(10f);
+				AddReward(1f);
 				Done();
 				// if (_master.StartAnimationIndex > 0 && distanceReward >= _master.ErrorCutoff)
-				if (_master.StartAnimationIndex > 0 && !shouldTerminate)
+				// if (_master.StartAnimationIndex > 0 && !shouldTerminate)
+				if (_master.StartAnimationIndex > 0)
 				 	_master.StartAnimationIndex--;
 			}
 		}
@@ -237,6 +239,36 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision {
 		if (!agentParameters.onDemandDecision)
 			_master.ResetPhase();
 	}
+	public virtual void OnTerrainCollision(GameObject other, GameObject terrain)
+	{
+		if (string.Compare(terrain.name, "Terrain", true) != 0)
+			return;
+		if (!_styleAnimator.AnimationStepsReady)
+			return;
+		var bodyPart = _master.BodyParts.FirstOrDefault(x=>x.Transform.gameObject == other);
+		if (bodyPart == null)
+			return;
+		switch (bodyPart.Group)
+		{
+			case BodyHelper002.BodyPartGroup.None:
+			case BodyHelper002.BodyPartGroup.Foot:
+			case BodyHelper002.BodyPartGroup.LegLower:
+				break;
+			default:
+				AddReward(-1f);
+				Done();
+				break;
+			case BodyHelper002.BodyPartGroup.Hand:
+				AddReward(-.5f);
+				Done();
+				break;
+			case BodyHelper002.BodyPartGroup.Head:
+				AddReward(-2f);
+				Done();
+				break;
+		}
+	}
+
 
 	public void OnSensorCollisionEnter(Collider sensorCollider, GameObject other) {
 			if (string.Compare(other.name, "Terrain", true) !=0)
