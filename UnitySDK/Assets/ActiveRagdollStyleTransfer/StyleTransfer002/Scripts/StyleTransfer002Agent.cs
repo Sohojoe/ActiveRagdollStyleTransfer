@@ -110,7 +110,6 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		var centerMassReward = 1f - _master.CenterOfMassDistance; // TODO
 
 		float poseRewardScale = .65f;
-		// poseRewardScale *=2;
 		float velocityRewardScale = .1f;
 		float endEffectorRewardScale = .15f;
 		float feetRewardScale = .15f;
@@ -121,19 +120,6 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		endEffectorReward = Mathf.Clamp(endEffectorReward, -1f, 1f);
 		centerMassReward = Mathf.Clamp(centerMassReward, -1f, 1f);
 		feetRewardScale = Mathf.Clamp(feetRewardScale, -1f, 1f);
-
-		// int terminateSignals = 0;
-		// // terminateSignals += poseReward <= 0f ? 1 : 0;
-		// // terminateSignals += velocityReward <= 0f ? 1 : 0;
-		// // terminateSignals += endEffectorRewardScale <= 0f ? 1 : 0;
-		// // terminateSignals += centerMassReward <= 0f ? 1 : 0;
-		// terminateSignals += poseReward <= -1f ? 1 : 0;
-		// terminateSignals += velocityReward <= -1f ? 1 : 0;
-		// terminateSignals += endEffectorRewardScale <= -1f ? 1 : 0;
-		// terminateSignals += centerMassReward <= -1f ? 1 : 0;
-		// bool shouldTerminate = terminateSignals >= 2 ? true : false;
-		// if (_master.IsInferenceMode)
-		// 	shouldTerminate = false;
 
 		float distanceReward = 
 			(poseReward * poseRewardScale) +
@@ -175,7 +161,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			// }
 			if (_master.IsDone()){
 				// AddReward(1f*(float)this.GetStepCount());
-				AddReward(1f);
+				// AddReward(10f);
 				Done();
 				// if (_master.StartAnimationIndex > 0 && distanceReward >= _master.ErrorCutoff)
 				// if (_master.StartAnimationIndex > 0 && !shouldTerminate)
@@ -255,17 +241,17 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			case BodyHelper002.BodyPartGroup.LegLower:
 				break;
 			default:
-				AddReward(-1f);
+				AddReward(-100f);
 				Done();
 				break;
-			case BodyHelper002.BodyPartGroup.Hand:
-				AddReward(-.5f);
-				Done();
-				break;
-			case BodyHelper002.BodyPartGroup.Head:
-				AddReward(-2f);
-				Done();
-				break;
+			// case BodyHelper002.BodyPartGroup.Hand:
+			// 	// AddReward(-.5f);
+			// 	Done();
+			// 	break;
+			// case BodyHelper002.BodyPartGroup.Head:
+			// 	// AddReward(-2f);
+			// 	Done();
+			// 	break;
 		}
 	}
 

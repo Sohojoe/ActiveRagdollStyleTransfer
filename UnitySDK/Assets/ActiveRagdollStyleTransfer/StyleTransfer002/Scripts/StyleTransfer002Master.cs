@@ -260,7 +260,7 @@ public class StyleTransfer002Master : MonoBehaviour {
             Quaternion animRotation = bodyPart.InitialRootRotation * animStep.Rotaions[0];
 			if (i != 0) {
 				animPosition += animStep.Positions[i];
-				animRotation *= animStep.Rotaions[i];
+				animRotation = bodyPart.InitialRootRotation * animStep.Rotaions[i];
 			}
 			Vector3 angularVelocity = animStep.AngularVelocities[i] / Time.fixedDeltaTime;
 			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
