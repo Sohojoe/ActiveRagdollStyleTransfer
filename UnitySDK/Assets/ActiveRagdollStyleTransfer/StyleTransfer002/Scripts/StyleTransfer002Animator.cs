@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MLAgents;
 using UnityEngine;
 
-public class StyleTransfer002Animator : MonoBehaviour {
+public class StyleTransfer002Animator : MonoBehaviour, IOnSensorCollision {
 
 	internal Animator anim;
+
+	public List<float> SensorIsInTouch;
+	List<GameObject> _sensors;
 
 	public List<AnimationStep> AnimationSteps;
 	public bool AnimationStepsReady;
@@ -49,6 +53,8 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		public Vector3 CenterOfMass;
 		public Vector3 TransformPosition;
 		public Quaternion TransformRotation;
+		public List<float> SensorIsInTouch;
+
 	}
 
 	// Use this for initialization
@@ -63,6 +69,17 @@ public class StyleTransfer002Animator : MonoBehaviour {
 			GetComponentsInChildren<Transform>()
 			.First(x=> BodyHelper002.GetBodyPartGroup(x.name) == BodyHelper002.BodyPartGroup.Hips)
 			.rotation;
+	}
+	void Awake()
+    {
+        SetupSensors();
+    }
+	void SetupSensors()
+	{
+		_sensors = GetComponentsInChildren<SensorBehavior>()
+			.Select(x=>x.gameObject)
+			.ToList();
+		SensorIsInTouch = Enumerable.Range(0,_sensors.Count).Select(x=>0f).ToList();
 	}
 	void Reset()
 	{
@@ -86,6 +103,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 			BodyParts.Add(bodyPart);
 		}
 		var partCount = BodyParts.Count;
+		SetupSensors();
 
 		_lastPosition = Enumerable.Repeat(Vector3.zero, partCount).ToList();
 		_lastRotation = Enumerable.Repeat(Quaternion.identity, partCount).ToList();
@@ -146,6 +164,7 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		animStep.Rotaions = Enumerable.Repeat(Quaternion.identity, c).ToList();
 		animStep.Velocity = transform.position - _lastVelocityPosition;
 		animStep.Names = BodyParts.Select(x=>x.Name).ToList();
+		animStep.SensorIsInTouch = new List<float>(SensorIsInTouch);
 		_lastVelocityPosition = transform.position;
 
 		var rootBone = BodyParts[0];
@@ -333,4 +352,27 @@ public class StyleTransfer002Animator : MonoBehaviour {
 		target.transform.rotation = rotation * rotationOffset;
 
 	}
+
+	public void OnSensorCollisionEnter(Collider sensorCollider, GameObject other)
+	{
+		if (string.Compare(other.name, "Terrain", true) !=0)
+			return;
+		var sensor = _sensors
+			.FirstOrDefault(x=>x == sensorCollider.gameObject);
+		if (sensor != null) {
+			var idx = _sensors.IndexOf(sensor);
+			SensorIsInTouch[idx] = 1f;
+		}
+	}
+	public void OnSensorCollisionExit(Collider sensorCollider, GameObject other)
+	{
+		if (string.Compare(other.gameObject.name, "Terrain", true) !=0)
+			return;
+		var sensor = _sensors
+			.FirstOrDefault(x=>x == sensorCollider.gameObject);
+		if (sensor != null) {
+			var idx = _sensors.IndexOf(sensor);
+			SensorIsInTouch[idx] = 0f;
+		}
+	}  
 }

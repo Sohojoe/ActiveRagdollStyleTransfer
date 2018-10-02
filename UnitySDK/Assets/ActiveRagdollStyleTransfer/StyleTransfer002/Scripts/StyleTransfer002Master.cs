@@ -20,10 +20,12 @@ public class StyleTransfer002Master : MonoBehaviour {
 	// ideally we dont want to generate model at inference
 	public float PositionDistance;
 	public float EndEffectorDistance; // feet, hands, head
-	public float FeetRotationDistance; // feet, hands, head
+	public float FeetRotationDistance; 
 	public float RotationDistance;
 	public float VelocityDistance;
 	public float CenterOfMassDistance;
+	public float SensorDistance;
+
 
 	// debug variables
 	public bool IgnorRewardUntilObservation;
@@ -52,6 +54,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	// public List<float> vector;
 
 	private StyleTransfer002Animator _muscleAnimator;
+	private StyleTransfer002Agent _agent;
 	private Brain _brain;
 	public bool IsInferenceMode;
 	bool _phaseIsRunning;
@@ -107,6 +110,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 			Muscles.Add(muscle);			
 		}
 		_muscleAnimator = FindObjectOfType<StyleTransfer002Animator>();
+		_agent = FindObjectOfType<StyleTransfer002Agent>();
 		_brain = FindObjectOfType<Brain>();
 		switch (_brain.brainType)
 		{
@@ -163,6 +167,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		RotationDistance = 0f;
 		VelocityDistance = 0f;
 		CenterOfMassDistance = 0f;
+		SensorDistance = 0f;
 		if (_phaseIsRunning && DebugShowWithOffset)
 			MimicAnimationFrame(debugAnimStep);
 		else if (_phaseIsRunning)
@@ -218,6 +223,14 @@ public class StyleTransfer002Master : MonoBehaviour {
 			ObsVelocity /= Time.fixedDeltaTime;
 			var velocityDistance = ObsVelocity-animVelocity;
 			VelocityDistance = velocityDistance.sqrMagnitude;
+			var sensorDistance = 0.0;
+			var sensorDistanceStep = 1.0 / _agent.SensorIsInTouch.Count;
+			for (int i = 0; i < _agent.SensorIsInTouch.Count; i++)
+			{
+				if (animStep.SensorIsInTouch[i] != _agent.SensorIsInTouch[i])
+					sensorDistance += sensorDistanceStep;
+			}
+			SensorDistance = (float) sensorDistance;
 		}
 		// normalize distances
 		// VelocityDistance /= 10f;

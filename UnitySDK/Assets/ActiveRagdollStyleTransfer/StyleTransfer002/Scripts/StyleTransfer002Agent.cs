@@ -70,19 +70,10 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
 				AddVectorObs(muscle.TargetNormalizedRotationZ);
 		}
-		if (false){
-			// temp hack to support old models
-			if (SensorIsInTouch?.Count>0){
-				AddVectorObs(SensorIsInTouch[0]);
-				AddVectorObs(0f);
-				AddVectorObs(SensorIsInTouch[1]);
-				AddVectorObs(0f);
-			}
-		} else {
-			AddVectorObs(_master.ObsCenterOfMass);
-			AddVectorObs(_master.ObsVelocity);
-			AddVectorObs(SensorIsInTouch);	
-		}
+
+		AddVectorObs(_master.ObsCenterOfMass);
+		AddVectorObs(_master.ObsVelocity);
+		AddVectorObs(SensorIsInTouch);	
 	}
 
 	public override void AgentAction(float[] vectorAction, string textAction)
@@ -108,25 +99,30 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		var endEffectorReward = 1f - _master.EndEffectorDistance;
 		var feetPoseReward = 1f - _master.FeetRotationDistance;
 		var centerMassReward = 1f - _master.CenterOfMassDistance; // TODO
+		var sensorReward = 1f - _master.SensorDistance;
+
 
 		float poseRewardScale = .65f;
 		float velocityRewardScale = .1f;
 		float endEffectorRewardScale = .15f;
 		float feetRewardScale = .15f;
 		float centerMassRewardScale = .1f;
+		float sensorRewardScale = .1f;
 
 		poseReward = Mathf.Clamp(poseReward, -1f, 1f);
 		velocityReward = Mathf.Clamp(velocityReward, -1f, 1f);
 		endEffectorReward = Mathf.Clamp(endEffectorReward, -1f, 1f);
 		centerMassReward = Mathf.Clamp(centerMassReward, -1f, 1f);
-		feetRewardScale = Mathf.Clamp(feetRewardScale, -1f, 1f);
+		feetPoseReward = Mathf.Clamp(feetPoseReward, -1f, 1f);
+		sensorReward = Mathf.Clamp(sensorReward, -1f, 1f);
 
 		float distanceReward = 
 			(poseReward * poseRewardScale) +
 			(velocityReward * velocityRewardScale) +
 			(endEffectorReward * endEffectorRewardScale) +
 			(feetPoseReward * feetRewardScale) +
-			(centerMassReward * centerMassRewardScale);
+			(centerMassReward * centerMassRewardScale) + 
+			(sensorReward * sensorRewardScale);
 		float reward = 
 			distanceReward
 			// - effortPenality +
@@ -144,6 +140,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 				(endEffectorReward * endEffectorRewardScale),
 				(feetPoseReward * feetRewardScale),
 				(centerMassReward * centerMassRewardScale),
+				(sensorReward * sensorRewardScale),
 				}.ToList();
             Monitor.Log("rewardHist", hist.ToArray());
         }

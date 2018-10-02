@@ -34,5 +34,10 @@ namespace MLAgents
             if (_onSensorCollision != null)
                 _onSensorCollision.OnSensorCollisionExit(_collider, other.gameObject);
         }
+        void OnTriggerStay(Collider other)
+        {
+            if (_onSensorCollision != null)
+                _onSensorCollision.OnSensorCollisionEnter(_collider, other.gameObject);
+        }
     }
 }
