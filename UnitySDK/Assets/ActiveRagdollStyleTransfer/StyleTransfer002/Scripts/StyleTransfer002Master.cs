@@ -266,10 +266,13 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	void MimicAnimationFrame(StyleTransfer002Animator.AnimationStep animStep, bool onlySetAnimation = false)
 	{
-		foreach (var rb in GetComponents<Rigidbody>())
+		if (!onlySetAnimation)
 		{
-            rb.angularVelocity = Vector3.zero;
-            rb.velocity = Vector3.zero;
+			foreach (var rb in GetComponents<Rigidbody>())
+			{
+				rb.angularVelocity = Vector3.zero;
+				rb.velocity = Vector3.zero;
+			}
 		}
 		foreach (var bodyPart in BodyParts)
 		{
