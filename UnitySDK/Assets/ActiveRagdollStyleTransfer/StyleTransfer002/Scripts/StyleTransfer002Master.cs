@@ -268,7 +268,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	{
 		if (!onlySetAnimation)
 		{
-			foreach (var rb in GetComponents<Rigidbody>())
+			foreach (var rb in GetComponentsInChildren<Rigidbody>())
 			{
 				rb.angularVelocity = Vector3.zero;
 				rb.velocity = Vector3.zero;

@@ -53,8 +53,10 @@ public class RagDoll002 : MonoBehaviour {
     void IgnoreCollision(string first, string second)
     {
         var rigidbodies = GetComponentsInChildren<Rigidbody>().ToList();
-        var rbOne = rigidbodies.First(x=>x.name.Contains(first)).GetComponent<Collider>();
-        var rbTwo = rigidbodies.First(x=>x.name.Contains(second)).GetComponent<Collider>();
-        Physics.IgnoreCollision(rbOne, rbTwo);
+        var colliderOnes = rigidbodies.First(x=>x.name.Contains(first)).GetComponents<Collider>();
+        var colliderTwos = rigidbodies.First(x=>x.name.Contains(second)).GetComponents<Collider>();
+        foreach (var c1 in colliderOnes)
+            foreach (var c2 in colliderTwos)
+                Physics.IgnoreCollision(c1, c2);
     }
 }
