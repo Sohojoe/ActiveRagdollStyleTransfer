@@ -235,7 +235,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		{
 			case BodyHelper002.BodyPartGroup.None:
 			case BodyHelper002.BodyPartGroup.Foot:
-			case BodyHelper002.BodyPartGroup.LegLower:
+			// case BodyHelper002.BodyPartGroup.LegLower:
 				break;
 			default:
 				AddReward(-100f);
