@@ -10,6 +10,7 @@ public class RagDoll002 : MonoBehaviour {
     {
         public string Muscle;
         public float Power;
+        public Vector3 PowerVector;
     }
 
     public List<MusclePower> MusclePowers;
