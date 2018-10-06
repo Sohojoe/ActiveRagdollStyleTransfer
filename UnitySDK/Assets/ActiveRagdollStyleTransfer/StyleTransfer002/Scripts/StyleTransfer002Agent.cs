@@ -38,6 +38,9 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 
 	override public void CollectObservations()
 	{
+		// for (int i = 0; i < 255; i++)
+		// 	AddVectorObs(0f);
+		// return;
 		AddVectorObs(_master.ObsPhase);
 
 		// if (false){
@@ -65,10 +68,10 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		{
 			if (muscle.ConfigurableJoint.angularXMotion != ConfigurableJointMotion.Locked)
 				AddVectorObs(muscle.TargetNormalizedRotationX);
-			if (muscle.ConfigurableJoint.angularYMotion != ConfigurableJointMotion.Locked)
-				AddVectorObs(muscle.TargetNormalizedRotationY);
-			if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
-				AddVectorObs(muscle.TargetNormalizedRotationZ);
+			// if (muscle.ConfigurableJoint.angularYMotion != ConfigurableJointMotion.Locked)
+			// 	AddVectorObs(muscle.TargetNormalizedRotationY);
+			// if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
+			// 	AddVectorObs(muscle.TargetNormalizedRotationZ);
 		}
 
 		AddVectorObs(_master.ObsCenterOfMass);
@@ -85,10 +88,10 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			// 	continue;
 			if (muscle.ConfigurableJoint.angularXMotion != ConfigurableJointMotion.Locked)
 				muscle.TargetNormalizedRotationX = vectorAction[i++];
-			if (muscle.ConfigurableJoint.angularYMotion != ConfigurableJointMotion.Locked)
-				muscle.TargetNormalizedRotationY = vectorAction[i++];
-			if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
-				muscle.TargetNormalizedRotationZ = vectorAction[i++];
+			// if (muscle.ConfigurableJoint.angularYMotion != ConfigurableJointMotion.Locked)
+			// 	muscle.TargetNormalizedRotationY = vectorAction[i++];
+			// if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
+			// 	muscle.TargetNormalizedRotationZ = vectorAction[i++];
 		}
         var jointsAtLimitPenality = GetJointsAtLimitPenality() * 4;
         float effort = GetEffort();

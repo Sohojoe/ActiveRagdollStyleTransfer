@@ -227,18 +227,18 @@ public class Muscle002
     //     }
     // }
 
-    public void MoveToAnim(Vector3 animPosition, Quaternion animRotation, Vector3 angularVelocity, Vector3 velocity)
-    {
-        Transform.position = animPosition;
-        Transform.rotation = animRotation;
-        Rigidbody.angularVelocity = angularVelocity;
-        Rigidbody.velocity = velocity;
-    }
-    public void SetAnimationPosition(Vector3 animPosition, Quaternion animRotation)
-    {
-        // _animationPosition = animPosition + InitialRootPosition;
-        // _animationRotation = animRotation * InitialRootRotation;
-        _animationPosition = animPosition;
-        _animationRotation = animRotation;
-    }
+    // public void MoveToAnim(Vector3 animPosition, Quaternion animRotation, Vector3 angularVelocity, Vector3 velocity)
+    // {
+    //     Transform.position = animPosition;
+    //     Transform.rotation = animRotation;
+    //     Rigidbody.angularVelocity = angularVelocity;
+    //     Rigidbody.velocity = velocity;
+    // }
+    // public void SetAnimationPosition(Vector3 animPosition, Quaternion animRotation)
+    // {
+    //     // _animationPosition = animPosition + InitialRootPosition;
+    //     // _animationRotation = animRotation * InitialRootRotation;
+    //     _animationPosition = animPosition;
+    //     _animationRotation = animRotation;
+    // }
 }

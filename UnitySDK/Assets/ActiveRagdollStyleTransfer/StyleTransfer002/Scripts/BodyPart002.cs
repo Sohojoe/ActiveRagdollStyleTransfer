@@ -96,7 +96,8 @@ public class BodyPart002
 			// Vector3 forward = Vector3.Cross (ConfigurableJoint.axis, ConfigurableJoint.secondaryAxis).normalized;
 			//Vector3 up = Vector3.Cross (forward, ConfigurableJoint.axis).normalized;
             Vector3 forward = this.Transform.forward;
-            Vector3 up = this.Transform.forward;
+            // Vector3 up = this.Transform.forward;
+            Vector3 up = this.Transform.up;
 			Quaternion toJointSpace = Quaternion.LookRotation(forward, up);
 			
 			ToJointSpaceInverse = Quaternion.Inverse(toJointSpace);
@@ -231,6 +232,15 @@ public class BodyPart002
         Transform.position = animPosition;
         Transform.rotation = animRotation;
         if (Rigidbody != null){
+            foreach (var childRb in Rigidbody.GetComponentsInChildren<Rigidbody>())
+            {
+                if (childRb == Rigidbody)
+                    continue;
+                childRb.transform.localPosition = Vector3.zero;
+                childRb.transform.localEulerAngles = Vector3.zero;
+                childRb.angularVelocity = Vector3.zero;
+                childRb.velocity = Vector3.zero;
+            }
             Rigidbody.angularVelocity = angularVelocity;
             Rigidbody.velocity = velocity;
         }

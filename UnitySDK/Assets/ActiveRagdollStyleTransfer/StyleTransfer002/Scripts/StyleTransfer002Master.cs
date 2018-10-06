@@ -62,6 +62,13 @@ public class StyleTransfer002Master : MonoBehaviour {
 	Vector3 _lastCenterOfMass;
 
 	// Use this for initialization
+	void Awake () {
+		foreach (var rb in GetComponentsInChildren<Rigidbody>())
+		{
+			if (rb.useGravity == false)
+				rb.solverVelocityIterations = 255;
+		}
+	}
 	void Start () {
 		Time.fixedDeltaTime = FixedDeltaTime;
 
@@ -285,7 +292,10 @@ public class StyleTransfer002Master : MonoBehaviour {
 			}
 			Vector3 angularVelocity = animStep.AngularVelocities[i] / Time.fixedDeltaTime;
 			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
-			if (!onlySetAnimation)
+			bool setAnim = !onlySetAnimation;
+			if (bodyPart.Name.Contains("head") || bodyPart.Name.Contains("upper_waist"))
+				setAnim = false;
+			if (setAnim)
 				bodyPart.MoveToAnim(animPosition, animRotation, angularVelocity, velocity);
 			bodyPart.SetAnimationPosition(animStep.Positions[i], animStep.Rotaions[i]);
 		}
