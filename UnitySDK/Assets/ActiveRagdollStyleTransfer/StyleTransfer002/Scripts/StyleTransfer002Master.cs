@@ -99,7 +99,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		var ragDoll = GetComponent<RagDoll002>();
 		foreach (var m in muscles)
 		{
-			var maximumForce = new Vector3(ragDoll.MusclePowers.First(x=>x.Muscle == m.name).Power,0,0);
+			var maximumForce = ragDoll.MusclePowers.First(x=>x.Muscle == m.name).PowerVector;
 			// maximumForce *= 2f;
 			var muscle = new Muscle002{
 				Rigidbody = m.GetComponent<Rigidbody>(),
@@ -292,6 +292,8 @@ public class StyleTransfer002Master : MonoBehaviour {
 			}
 			Vector3 angularVelocity = animStep.AngularVelocities[i] / Time.fixedDeltaTime;
 			Vector3 velocity = animStep.Velocities[i] / Time.fixedDeltaTime;
+			// angularVelocity = Vector3.zero;
+			// velocity = Vector3.zero;
 			bool setAnim = !onlySetAnimation;
 			if (bodyPart.Name.Contains("head") || bodyPart.Name.Contains("upper_waist"))
 				setAnim = false;
