@@ -11,6 +11,14 @@ Research into using mocap (and longer term video) as style reference for trainin
 
 ----
 
+#### Using this repro
+* To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md) 
+* To try different moves: Replace reference MoCap in animation tree and select the right ML-Agent trained model
+* See the [ML-Agents documentation](https://github.com/Unity-Technologies/ml-agents) for how to train
+* Post an Issue if you are still stuck
+
+----
+
 #### Contributors
 * Joe Booth ([SohoJoe](https://github.com/Sohojoe))
 
