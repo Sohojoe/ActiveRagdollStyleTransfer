@@ -26,7 +26,7 @@ Running (002.114) |
 --- | 
 ![StyleTransfer002.114](images/StyleTransfer002.114-running-32m.gif) | 
 
-Waling (002.113) | Backflip (002.115) |
+Walking (002.113) | Backflip (002.115) |
 --- | ---- |
 ![StyleTransfer002.113](images/StyleTransfer002.113-walking-32m.gif) | ![StyleTransfer002.115](images/StyleTransfer002.115-backflip-48m.gif) 
 
