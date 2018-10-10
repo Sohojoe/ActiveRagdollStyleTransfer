@@ -22,8 +22,8 @@ Research into using mocap (and longer term video) as style reference for trainin
 
 ## StyleTransfer002 (In-Progress)
 
-Running (002.114) | 
---- | ---- 
+Running (002.114) |
+--- | 
 ![StyleTransfer002.114](images/StyleTransfer002.114-running-32m.gif) | 
 
 Waling (002.113) | Backflip (002.115) |
