@@ -15,6 +15,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	List<GameObject> _sensors;
 
 	public bool ShowMonitor = false;
+	bool _waitingForAnimation;
 
 	static int _startCount;
 
@@ -23,12 +24,13 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		_master = GetComponent<StyleTransfer002Master>();
 		_styleAnimator = FindObjectOfType<StyleTransfer002Animator>();
 		_startCount++;
+		_waitingForAnimation = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (agentParameters.onDemandDecision && _styleAnimator.AnimationStepsReady){
-			agentParameters.onDemandDecision = false;
+		if (_waitingForAnimation && _styleAnimator.AnimationStepsReady){
+			_waitingForAnimation = false;
 			_master.ResetPhase();
 		}
 	}
@@ -226,7 +228,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			.Select(x=>x.gameObject)
 			.ToList();
 		SensorIsInTouch = Enumerable.Range(0,_sensors.Count).Select(x=>0f).ToList();
-		if (!agentParameters.onDemandDecision)
+		if (!_waitingForAnimation)
 			_master.ResetPhase();
 	}
 	public virtual void OnTerrainCollision(GameObject other, GameObject terrain)

@@ -33,3 +33,12 @@ LearnFromMocapBrain:
     summary_freq: 1000
     num_layers: 2
     hidden_units: 512
+
+TrainerBrain:
+    # use_recurrent: true
+    # sequence_length: 64
+    # normalize: true
+    num_layers: 2
+    hidden_units: 64
+    # memory_size: 256
+    max_steps: 1e6

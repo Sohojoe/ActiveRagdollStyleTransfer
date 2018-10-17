@@ -21,6 +21,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public float PositionDistance;
 	public float EndEffectorDistance; // feet, hands, head
 	public float FeetRotationDistance; 
+	public float EndEffectorVelocityDistance; // feet, hands, head
 	public float RotationDistance;
 	public float VelocityDistance;
 	public float CenterOfMassDistance;
@@ -55,6 +56,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	private StyleTransfer002Animator _muscleAnimator;
 	private StyleTransfer002Agent _agent;
+	private StyleTransfer002TrainerAgent _trainerAgent;
 	private Brain _brain;
 	public bool IsInferenceMode;
 	bool _phaseIsRunning;
@@ -117,8 +119,9 @@ public class StyleTransfer002Master : MonoBehaviour {
 			Muscles.Add(muscle);			
 		}
 		_muscleAnimator = FindObjectOfType<StyleTransfer002Animator>();
-		_agent = FindObjectOfType<StyleTransfer002Agent>();
-		_brain = FindObjectOfType<Brain>();
+		_agent = GetComponent<StyleTransfer002Agent>();
+		_trainerAgent = GetComponent<StyleTransfer002TrainerAgent>();
+		_brain = FindObjectsOfType<Brain>().First(x=>x.name=="LearnFromMocapBrain");
 		switch (_brain.brainType)
 		{
 			case BrainType.External:
@@ -171,6 +174,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		PositionDistance = 0f;
 		EndEffectorDistance = 0f;
 		FeetRotationDistance = 0f;
+		EndEffectorVelocityDistance = 0;
 		RotationDistance = 0f;
 		VelocityDistance = 0f;
 		CenterOfMassDistance = 0f;
@@ -325,6 +329,15 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	public void ResetPhase()
 	{
+		_agent.agentParameters.onDemandDecision = true;
+		_trainerAgent.SetBrainParams(_muscleAnimator.AnimationSteps.Count);
+		_trainerAgent.RequestDecision(_agent.AverageReward);
+	}
+
+	public void SetStartIndex(int startIdx)
+	{
+		_agent.agentParameters.onDemandDecision = false;
+
 		// _animationIndex =  UnityEngine.Random.Range(0, _muscleAnimator.AnimationSteps.Count);
 		if (!_phaseIsRunning){
 			StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
@@ -336,37 +349,39 @@ public class StyleTransfer002Master : MonoBehaviour {
 				follow.target = CameraTarget;
 			}
 		}
-		// ErrorCutoff = UnityEngine.Random.Range(-15f, 2f);
-		// ErrorCutoff = UnityEngine.Random.Range(-10f, 1f);
-		// ErrorCutoff = UnityEngine.Random.Range(-5f, 1f);
-		ErrorCutoff = UnityEngine.Random.Range(-3f, .5f);
-		if (IsInferenceMode)
-			ErrorCutoff = UnityEngine.Random.Range(-3f, -3f);
-		var lastLenght = AnimationIndex - EpisodeAnimationIndex;
-		if (lastLenght >=  _muscleAnimator.AnimationSteps.Count-2){
-			StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
-			// StartAnimationIndex = 0;
-			// ErrorCutoff += 0.25f;
-			EpisodeAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
-			AnimationIndex = EpisodeAnimationIndex;
-		}
+		// // ErrorCutoff = UnityEngine.Random.Range(-15f, 2f);
+		// // ErrorCutoff = UnityEngine.Random.Range(-10f, 1f);
+		// // ErrorCutoff = UnityEngine.Random.Range(-5f, 1f);
+		// ErrorCutoff = UnityEngine.Random.Range(-3f, .5f);
+		// if (IsInferenceMode)
+		// 	ErrorCutoff = UnityEngine.Random.Range(-3f, -3f);
+		// var lastLenght = AnimationIndex - EpisodeAnimationIndex;
+		// if (lastLenght >=  _muscleAnimator.AnimationSteps.Count-2){
+		// 	StartAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
+		// 	// StartAnimationIndex = 0;
+		// 	// ErrorCutoff += 0.25f;
+		// 	EpisodeAnimationIndex = _muscleAnimator.AnimationSteps.Count-1;
+		// 	AnimationIndex = EpisodeAnimationIndex;
+		// }
 
-		// start with random
-		AnimationIndex = UnityEngine.Random.Range(0, _muscleAnimator.AnimationSteps.Count);
-		// AnimationIndex = StartAnimationIndex;
-		if (IsInferenceMode && !UseRandomIndexForInference){
-			AnimationIndex = 1;
-		} else if (!IsInferenceMode && !UseRandomIndexForTraining) {
-			var minIdx = StartAnimationIndex;
-			if (_muscleAnimator.IsLoopingAnimation)
-				minIdx = minIdx == 0 ? 1 : minIdx;
-			var maxIdx = _muscleAnimator.AnimationSteps.Count-1;
-			var range = 30f;//maxIdx-minIdx;
-			var rnd = (NextGaussian() /3f) * (float) range;
-			var idx = Mathf.Clamp((float)minIdx + rnd, minIdx, (float)maxIdx);
-			AnimationIndex = (int)idx;
-		}
-		// AnimationIndex = StartAnimationIndex;
+		// // start with random
+		// AnimationIndex = UnityEngine.Random.Range(0, _muscleAnimator.AnimationSteps.Count);
+		// // AnimationIndex = StartAnimationIndex;
+		// if (IsInferenceMode && !UseRandomIndexForInference){
+		// 	AnimationIndex = 1;
+		// } else if (!IsInferenceMode && !UseRandomIndexForTraining) {
+		// 	var minIdx = StartAnimationIndex;
+		// 	if (_muscleAnimator.IsLoopingAnimation)
+		// 		minIdx = minIdx == 0 ? 1 : minIdx;
+		// 	var maxIdx = _muscleAnimator.AnimationSteps.Count-1;
+		// 	var range = 30f;//maxIdx-minIdx;
+		// 	var rnd = (NextGaussian() /3f) * (float) range;
+		// 	var idx = Mathf.Clamp((float)minIdx + rnd, minIdx, (float)maxIdx);
+		// 	AnimationIndex = (int)idx;
+		// }
+		// // AnimationIndex = StartAnimationIndex;
+		
+		AnimationIndex = startIdx;
 		_phaseIsRunning = true;
 		_isDone = false;
 		var animStep = _muscleAnimator.AnimationSteps[AnimationIndex];
@@ -374,6 +389,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		PositionDistance = 0f;
 		EndEffectorDistance = 0f;
 		FeetRotationDistance = 0f;
+		EndEffectorVelocityDistance = 0f;
 		RotationDistance = 0f;
 		VelocityDistance = 0f;
 		IgnorRewardUntilObservation = true;

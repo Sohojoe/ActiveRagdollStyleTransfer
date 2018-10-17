@@ -370,6 +370,7 @@ GameObject:
   - component: {fileID: 114531400407079678}
   - component: {fileID: 114170078182925660}
   - component: {fileID: 114465839740088794}
+  - component: {fileID: 114013362287058298}
   m_Layer: 0
   m_Name: MarathonMan
   m_TagString: Untagged
@@ -1976,6 +1977,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114013362287058298
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1702640022933616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adad397a25d3947cdad71fd1cf5fa7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 0}
+  agentParameters:
+    agentCameras: []
+    maxStep: 0
+    resetOnDone: 1
+    onDemandDecision: 1
+    numberOfActionsBetweenDecisions: 1
 --- !u!114 &114170078182925660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1997,6 +2016,7 @@ MonoBehaviour:
   PositionDistance: 0
   EndEffectorDistance: 0
   FeetRotationDistance: 0
+  EndEffectorVelocityDistance: 0
   RotationDistance: 0
   VelocityDistance: 0
   CenterOfMassDistance: 0
@@ -2012,7 +2032,7 @@ MonoBehaviour:
   EpisodeAnimationIndex: 0
   StartAnimationIndex: 0
   UseRandomIndexForTraining: 1
-  UseRandomIndexForInference: 0
+  UseRandomIndexForInference: 1
   CameraFollowMe: 0
   CameraTarget: {fileID: 4105698901072006}
   IsInferenceMode: 0
@@ -2067,6 +2087,8 @@ MonoBehaviour:
     resetOnDone: 1
     onDemandDecision: 1
     numberOfActionsBetweenDecisions: 5
+  FrameReward: 0
+  AverageReward: 0
   SensorIsInTouch: []
   ShowMonitor: 0
 --- !u!114 &114531400407079678
