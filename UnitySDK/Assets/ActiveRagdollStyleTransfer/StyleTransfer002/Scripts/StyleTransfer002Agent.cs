@@ -102,7 +102,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		var poseReward = 1f - _master.RotationDistance;
 		var velocityReward = 1f - Mathf.Abs(_master.VelocityDistance);
 		var endEffectorReward = 1f - _master.EndEffectorDistance;
-		var feetPoseReward = 1f - _master.FeetRotationDistance;
+		// var feetPoseReward = 1f - _master.FeetRotationDistance;
 		var centerMassReward = 1f - _master.CenterOfMassDistance;
 		var sensorReward = 1f - _master.SensorDistance;
 
@@ -110,7 +110,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		float poseRewardScale = .65f;
 		float velocityRewardScale = .1f;
 		float endEffectorRewardScale = .15f;
-		float feetRewardScale = .15f;
+		// float feetRewardScale = .15f;
 		float centerMassRewardScale = .1f;
 		float sensorRewardScale = .1f;
 
@@ -125,7 +125,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			(poseReward * poseRewardScale) +
 			(velocityReward * velocityRewardScale) +
 			(endEffectorReward * endEffectorRewardScale) +
-			(feetPoseReward * feetRewardScale) +
+			// (feetPoseReward * feetRewardScale) +
 			(centerMassReward * centerMassRewardScale) + 
 			(sensorReward * sensorRewardScale);
 		float reward = 
@@ -143,7 +143,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 				(poseReward * poseRewardScale),
 				(velocityReward * velocityRewardScale),
 				(endEffectorReward * endEffectorRewardScale),
-				(feetPoseReward * feetRewardScale),
+				// (feetPoseReward * feetRewardScale),
 				(centerMassReward * centerMassRewardScale),
 				(sensorReward * sensorRewardScale),
 				}.ToList();
