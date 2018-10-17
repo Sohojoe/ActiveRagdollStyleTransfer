@@ -353,6 +353,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 		// start with random
 		AnimationIndex = UnityEngine.Random.Range(0, _muscleAnimator.AnimationSteps.Count);
+		// AnimationIndex = StartAnimationIndex;
 		if (IsInferenceMode && !UseRandomIndexForInference){
 			AnimationIndex = 1;
 		} else if (!IsInferenceMode && !UseRandomIndexForTraining) {

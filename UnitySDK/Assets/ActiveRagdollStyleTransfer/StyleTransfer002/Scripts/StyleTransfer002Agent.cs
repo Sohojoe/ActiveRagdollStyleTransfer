@@ -6,6 +6,8 @@ using System.Linq;
 
 public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollision {
 
+	public float FrameReward;
+	public float AverageReward;
 	public List<float> SensorIsInTouch;
 	StyleTransfer002Master _master;
 	StyleTransfer002Animator _styleAnimator;
@@ -101,7 +103,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		var velocityReward = 1f - Mathf.Abs(_master.VelocityDistance);
 		var endEffectorReward = 1f - _master.EndEffectorDistance;
 		var feetPoseReward = 1f - _master.FeetRotationDistance;
-		var centerMassReward = 1f - _master.CenterOfMassDistance; // TODO
+		var centerMassReward = 1f - _master.CenterOfMassDistance;
 		var sensorReward = 1f - _master.SensorDistance;
 
 
@@ -169,6 +171,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 				 	_master.StartAnimationIndex--;
 			}
 		}
+		FrameReward = reward;
+		AverageReward = GetCumulativeReward() / (float) GetStepCount();
 	}
 	float GetEffort(string[] ignorJoints = null)
 	{
