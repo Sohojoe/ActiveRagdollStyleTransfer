@@ -114,12 +114,12 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		float centerMassRewardScale = .1f;
 		float sensorRewardScale = .1f;
 
-		poseReward = Mathf.Clamp(poseReward, -1f, 1f);
-		velocityReward = Mathf.Clamp(velocityReward, -1f, 1f);
-		endEffectorReward = Mathf.Clamp(endEffectorReward, -1f, 1f);
-		centerMassReward = Mathf.Clamp(centerMassReward, -1f, 1f);
-		feetPoseReward = Mathf.Clamp(feetPoseReward, -1f, 1f);
-		sensorReward = Mathf.Clamp(sensorReward, -1f, 1f);
+		// poseReward = Mathf.Clamp(poseReward, -1f, 1f);
+		// velocityReward = Mathf.Clamp(velocityReward, -1f, 1f);
+		// endEffectorReward = Mathf.Clamp(endEffectorReward, -1f, 1f);
+		// centerMassReward = Mathf.Clamp(centerMassReward, -1f, 1f);
+		// feetPoseReward = Mathf.Clamp(feetPoseReward, -1f, 1f);
+		// sensorReward = Mathf.Clamp(sensorReward, -1f, 1f);
 
 		float distanceReward = 
 			(poseReward * poseRewardScale) +

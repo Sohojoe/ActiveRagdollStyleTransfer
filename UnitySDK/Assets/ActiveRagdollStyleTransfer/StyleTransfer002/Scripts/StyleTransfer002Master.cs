@@ -241,7 +241,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		}
 		// normalize distances
 		// VelocityDistance /= 10f;
-		VelocityDistance = Mathf.Clamp(VelocityDistance, -1f, 1f);
+		// VelocityDistance = Mathf.Clamp(VelocityDistance, -1f, 1f);
 		// CenterOfMassDistance
 
 		if (IgnorRewardUntilObservation)
