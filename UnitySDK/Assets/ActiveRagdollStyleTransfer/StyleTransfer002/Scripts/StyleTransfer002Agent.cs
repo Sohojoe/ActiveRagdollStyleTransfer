@@ -186,6 +186,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 
 		if (!_master.IgnorRewardUntilObservation)
 			AddReward(reward);
+		if (distanceReward < 0.18f && _master.IsInferenceMode == false)
+			Done();
 		if (!IsDone()){
 			// // if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
 			// if (shouldTerminate && !_master.DebugShowWithOffset) {
