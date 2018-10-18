@@ -101,20 +101,52 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
         float effort = GetEffort();
         var effortPenality = 0.05f * (float)effort;
 		
-		var poseReward = 1f - _master.RotationDistance;
-		var velocityReward = 1f - Mathf.Abs(_master.VelocityDistance);
-		var endEffectorReward = 1f - _master.EndEffectorDistance;
-		// var feetPoseReward = 1f - _master.FeetRotationDistance;
-		var centerMassReward = 1f - _master.CenterOfMassDistance;
-		var sensorReward = 1f - _master.SensorDistance;
+		// var poseReward = 1f - _master.RotationDistance;
+		// var velocityReward = 1f - Mathf.Abs(_master.VelocityDistance);
+		// var endEffectorReward = 1f - _master.EndEffectorDistance;
+		// // var feetPoseReward = 1f - _master.FeetRotationDistance;
+		// var centerMassReward = 1f - _master.CenterOfMassDistance;
+		// var sensorReward = 1f - _master.SensorDistance;
 
+		var rotationDistanceScale = (float)_master.BodyParts.Count;
+		var velocityDistanceScale = 3f;
+		var endEffectorDistanceScale = 8f;
+		var centerOfMassDistancScalee = 5f;
+		var sensorDistanceScale = 1f;
+		var rotationDistance = _master.RotationDistance;
+		var velocityDistance = Mathf.Abs(_master.VelocityDistance);
+		var endEffectorDistance = _master.EndEffectorDistance;
+		var centerOfMassDistance = _master.CenterOfMassDistance;
+		var sensorDistance = _master.SensorDistance;
+		rotationDistance = Mathf.Clamp(rotationDistance, 0f, rotationDistanceScale);
+		velocityDistance = Mathf.Clamp(velocityDistance, 0f, velocityDistanceScale);
+		endEffectorDistance = Mathf.Clamp(endEffectorDistance, 0f, endEffectorDistanceScale);
+		centerOfMassDistance = Mathf.Clamp(centerOfMassDistance, 0f, centerOfMassDistancScalee);
+		sensorDistance = Mathf.Clamp(sensorDistance, 0f, sensorDistanceScale);
 
-		float poseRewardScale = .65f;
-		float velocityRewardScale = .1f;
-		float endEffectorRewardScale = .15f;
-		// float feetRewardScale = .15f;
-		float centerMassRewardScale = .1f;
-		float sensorRewardScale = .1f;
+		var rotationReward = (rotationDistanceScale - rotationDistance) / rotationDistanceScale;
+		var velocityReward = (velocityDistanceScale - velocityDistance) / velocityDistanceScale;
+		var endEffectorReward = (endEffectorDistanceScale - endEffectorDistance) / endEffectorDistanceScale;
+		var centerMassReward = (centerOfMassDistancScalee - centerOfMassDistance) / centerOfMassDistancScalee;
+		var sensorReward = (sensorDistanceScale - sensorDistance) / sensorDistanceScale;
+		rotationReward = Mathf.Pow(rotationReward, rotationDistanceScale);
+		velocityReward = Mathf.Pow(velocityReward, velocityDistanceScale);
+		endEffectorReward = Mathf.Pow(endEffectorReward, endEffectorDistanceScale);
+		centerMassReward = Mathf.Pow(centerMassReward, centerOfMassDistancScalee);
+		sensorReward = Mathf.Pow(sensorReward, sensorDistanceScale);
+
+		float rotationRewardScale = .65f*.9f;
+		float velocityRewardScale = .1f*.9f;
+		float endEffectorRewardScale = .15f*.9f;
+		float centerMassRewardScale = .1f*.9f;
+		float sensorRewardScale = .1f*.9f;
+
+		// float poseRewardScale = .65f;
+		// float velocityRewardScale = .1f;
+		// float endEffectorRewardScale = .15f;
+		// // float feetRewardScale = .15f;
+		// float centerMassRewardScale = .1f;
+		// float sensorRewardScale = .1f;
 
 		// poseReward = Mathf.Clamp(poseReward, -1f, 1f);
 		// velocityReward = Mathf.Clamp(velocityReward, -1f, 1f);
@@ -124,7 +156,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		// sensorReward = Mathf.Clamp(sensorReward, -1f, 1f);
 
 		float distanceReward = 
-			(poseReward * poseRewardScale) +
+			(rotationReward * rotationRewardScale) +
 			(velocityReward * velocityRewardScale) +
 			(endEffectorReward * endEffectorRewardScale) +
 			// (feetPoseReward * feetRewardScale) +
@@ -142,7 +174,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 				distanceReward,
                 - jointsAtLimitPenality, 
                 // - effortPenality, 
-				(poseReward * poseRewardScale),
+				(rotationReward * rotationRewardScale),
 				(velocityReward * velocityRewardScale),
 				(endEffectorReward * endEffectorRewardScale),
 				// (feetPoseReward * feetRewardScale),
@@ -247,7 +279,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			// case BodyHelper002.BodyPartGroup.LegLower:
 				break;
 			default:
-				AddReward(-100f);
+				// AddReward(-100f);
 				Done();
 				break;
 			// case BodyHelper002.BodyPartGroup.Hand:

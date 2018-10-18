@@ -18,7 +18,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	// model observations
 	// i.e. model = difference between mocap and actual)
 	// ideally we dont want to generate model at inference
-	public float PositionDistance;
+	// public float PositionDistance;
 	public float EndEffectorDistance; // feet, hands, head
 	public float FeetRotationDistance; 
 	public float EndEffectorVelocityDistance; // feet, hands, head
@@ -26,6 +26,16 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public float VelocityDistance;
 	public float CenterOfMassDistance;
 	public float SensorDistance;
+
+	public float MaxEndEffectorDistance; // feet, hands, head
+	public float MaxFeetRotationDistance; 
+	public float MaxEndEffectorVelocityDistance; // feet, hands, head
+	public float MaxRotationDistance;
+	public float MaxVelocityDistance;
+	public float MaxCenterOfMassDistance;
+	public float MaxSensorDistance;
+
+	
 
 
 	// debug variables
@@ -171,7 +181,6 @@ public class StyleTransfer002Master : MonoBehaviour {
 			}
 			animStep = _muscleAnimator.AnimationSteps[AnimationIndex];
 		}
-		PositionDistance = 0f;
 		EndEffectorDistance = 0f;
 		FeetRotationDistance = 0f;
 		EndEffectorVelocityDistance = 0;
@@ -196,8 +205,6 @@ public class StyleTransfer002Master : MonoBehaviour {
 		{
 			if (_phaseIsRunning){
 				bodyPart.UpdateObservations();
-				PositionDistance += bodyPart.ObsDeltaFromAnimationPosition.sqrMagnitude;
-				// PositionDistance += bodyPart.ObsDeltaFromAnimationPosition.magnitude;
 				
 				var rotDistance = bodyPart.ObsAngleDeltaFromAnimationRotation;
 				var squareRotDistance = Mathf.Pow(rotDistance,2);
@@ -248,6 +255,16 @@ public class StyleTransfer002Master : MonoBehaviour {
 		// VelocityDistance = Mathf.Clamp(VelocityDistance, -1f, 1f);
 		// CenterOfMassDistance
 
+		if (!IgnorRewardUntilObservation){
+			MaxEndEffectorDistance = Mathf.Max(MaxEndEffectorDistance, EndEffectorDistance);
+			MaxFeetRotationDistance = Mathf.Max(MaxFeetRotationDistance, FeetRotationDistance);
+			MaxEndEffectorVelocityDistance = Mathf.Max(MaxEndEffectorVelocityDistance, EndEffectorVelocityDistance);
+			MaxRotationDistance = Mathf.Max(MaxRotationDistance, RotationDistance);
+			MaxVelocityDistance = Mathf.Max(MaxVelocityDistance, VelocityDistance);
+			MaxCenterOfMassDistance = Mathf.Max(MaxCenterOfMassDistance, CenterOfMassDistance);
+			MaxSensorDistance = Mathf.Max(MaxSensorDistance, SensorDistance);
+		}
+
 		if (IgnorRewardUntilObservation)
 			IgnorRewardUntilObservation = false;
 
@@ -268,7 +285,6 @@ public class StyleTransfer002Master : MonoBehaviour {
 			_muscleAnimator.anim.transform.position = animStep.TransformPosition;
 			_muscleAnimator.anim.transform.rotation = animStep.TransformRotation;
 		}
-
 	}
 	void CompareAnimationFrame(StyleTransfer002Animator.AnimationStep animStep)
 	{
@@ -386,7 +402,6 @@ public class StyleTransfer002Master : MonoBehaviour {
 		_isDone = false;
 		var animStep = _muscleAnimator.AnimationSteps[AnimationIndex];
 		TimeStep = animStep.TimeStep;
-		PositionDistance = 0f;
 		EndEffectorDistance = 0f;
 		FeetRotationDistance = 0f;
 		EndEffectorVelocityDistance = 0f;
