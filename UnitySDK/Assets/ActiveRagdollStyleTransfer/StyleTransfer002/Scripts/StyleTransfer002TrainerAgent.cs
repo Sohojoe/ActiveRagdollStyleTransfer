@@ -10,7 +10,7 @@ public class StyleTransfer002TrainerAgent : Agent
     int _totalAnimFrames;
 	StyleTransfer002Master _master;
 	private Brain _brain;
-
+    int _decisions = 0;
     void Start () {
 		_master = GetComponent<StyleTransfer002Master>();
 		_brain = FindObjectsOfType<Brain>().First(x=>x.name=="TrainerBrain");
@@ -24,6 +24,15 @@ public class StyleTransfer002TrainerAgent : Agent
         var reward = 1f - averageReward;
         AddReward(reward);
         RequestDecision();
+        _decisions++;
+        if (_decisions > 10){
+            Done();
+            _decisions = 0;
+        }
+    }
+    public override void AgentReset()
+	{
+        _decisions = 0;
     }
 
     public void SetBrainParams(int totalAnimFrames)
@@ -39,7 +48,10 @@ public class StyleTransfer002TrainerAgent : Agent
 
     override public void CollectObservations()
 	{
-        AddVectorObs(_startIdx, _totalAnimFrames);
+        var len = _totalAnimFrames;
+        if (len == 0)
+            len = _brain.brainParameters.vectorObservationSize;
+        AddVectorObs(_startIdx, len);
     }
     
     public override void AgentAction(float[] vectorAction, string textAction)

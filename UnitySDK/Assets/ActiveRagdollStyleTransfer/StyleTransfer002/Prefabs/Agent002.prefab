@@ -1991,7 +1991,7 @@ MonoBehaviour:
   brain: {fileID: 0}
   agentParameters:
     agentCameras: []
-    maxStep: 100
+    maxStep: 0
     resetOnDone: 1
     onDemandDecision: 1
     numberOfActionsBetweenDecisions: 1
@@ -2013,7 +2013,6 @@ MonoBehaviour:
   ObsPhase: 0
   ObsCenterOfMass: {x: 0, y: 0, z: 0}
   ObsVelocity: {x: 0, y: 0, z: 0}
-  PositionDistance: 0
   EndEffectorDistance: 0
   FeetRotationDistance: 0
   EndEffectorVelocityDistance: 0
@@ -2021,6 +2020,13 @@ MonoBehaviour:
   VelocityDistance: 0
   CenterOfMassDistance: 0
   SensorDistance: 0
+  MaxEndEffectorDistance: 0
+  MaxFeetRotationDistance: 0
+  MaxEndEffectorVelocityDistance: 0
+  MaxRotationDistance: 0
+  MaxVelocityDistance: 0
+  MaxCenterOfMassDistance: 0
+  MaxSensorDistance: 0
   IgnorRewardUntilObservation: 0
   ErrorCutoff: 0
   DebugShowWithOffset: 0
