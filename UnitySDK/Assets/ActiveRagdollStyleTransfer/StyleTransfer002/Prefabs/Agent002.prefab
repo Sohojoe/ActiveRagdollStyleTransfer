@@ -1991,7 +1991,7 @@ MonoBehaviour:
   brain: {fileID: 0}
   agentParameters:
     agentCameras: []
-    maxStep: 0
+    maxStep: 100
     resetOnDone: 1
     onDemandDecision: 1
     numberOfActionsBetweenDecisions: 1
