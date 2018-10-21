@@ -97,7 +97,6 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			if (muscle.ConfigurableJoint.angularZMotion != ConfigurableJointMotion.Locked)
 				muscle.TargetNormalizedRotationZ = vectorAction[i++];
 		}
-        var jointsAtLimitPenality = GetJointsAtLimitPenality() * 4;
         float effort = GetEffort();
         var effortPenality = 0.05f * (float)effort;
 		
@@ -154,6 +153,9 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		// centerMassReward = Mathf.Clamp(centerMassReward, -1f, 1f);
 		// feetPoseReward = Mathf.Clamp(feetPoseReward, -1f, 1f);
 		// sensorReward = Mathf.Clamp(sensorReward, -1f, 1f);
+        var jointsNotAtLimitReward = 1f - JointsAtLimit();
+		var jointsNotAtLimitRewardScale = .09f;
+
 
 		float distanceReward = 
 			(rotationReward * rotationRewardScale) +
@@ -165,14 +167,14 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		float reward = 
 			distanceReward
 			// - effortPenality +
-			- jointsAtLimitPenality;
+			+ (jointsNotAtLimitReward * jointsNotAtLimitRewardScale);
 
 		// HACK _startCount used as Monitor does not like reset
         if (ShowMonitor && _startCount < 2) {
             var hist = new []{
                 reward,
 				distanceReward,
-                - jointsAtLimitPenality, 
+                (jointsNotAtLimitReward * jointsNotAtLimitRewardScale), 
                 // - effortPenality, 
 				(rotationReward * rotationRewardScale),
 				(velocityReward * velocityRewardScale),
@@ -231,9 +233,10 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		}
 		return (float)effort;
 	}	
-	float GetJointsAtLimitPenality(string[] ignorJoints = null)
+	float JointsAtLimit(string[] ignorJoints = null)
 	{
 		int atLimitCount = 0;
+		int totalJoints = 0;
 		foreach (var muscle in _master.Muscles)
 		{
 			if(muscle.Parent == null)
@@ -248,10 +251,11 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 				atLimitCount++;
 			if (Mathf.Abs(muscle.TargetNormalizedRotationZ) >= 1f)
 				atLimitCount++;
-            }
-            float penality = atLimitCount * 0.2f;
-            return (float)penality;
-        }
+			totalJoints++;
+		}
+		float fractionOfJointsAtLimit = (float)atLimitCount / (float)totalJoints;
+		return fractionOfJointsAtLimit;
+	}
 
 	// public override void AgentOnDone()
 	// {
