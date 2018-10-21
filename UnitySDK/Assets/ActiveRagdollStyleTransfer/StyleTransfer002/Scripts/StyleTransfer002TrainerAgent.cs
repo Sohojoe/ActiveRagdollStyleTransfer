@@ -9,9 +9,11 @@ public class StyleTransfer002TrainerAgent : Agent
     int _startIdx;
     int _totalAnimFrames;
 	StyleTransfer002Master _master;
+	StyleTransfer002Agent _agent;
 	private Brain _brain;
     int _decisions = 0;
     void Start () {
+		_agent = GetComponent<StyleTransfer002Agent>();
 		_master = GetComponent<StyleTransfer002Master>();
 		_brain = FindObjectsOfType<Brain>().First(x=>x.name=="TrainerBrain");
 	}
@@ -37,8 +39,8 @@ public class StyleTransfer002TrainerAgent : Agent
 
     public void SetBrainParams(int totalAnimFrames)
     {
-        _totalAnimFrames = totalAnimFrames;
-        _brain.brainParameters.vectorObservationSize = totalAnimFrames;
+        _totalAnimFrames = totalAnimFrames / _agent.agentParameters.numberOfActionsBetweenDecisions;
+        _brain.brainParameters.vectorObservationSize = _totalAnimFrames;
     }
 
     override public void InitializeAgent()
@@ -50,7 +52,7 @@ public class StyleTransfer002TrainerAgent : Agent
 	{
         var len = _totalAnimFrames;
         if (len == 0)
-            len = _brain.brainParameters.vectorObservationSize;
+            len = _brain.brainParameters.vectorObservationSize / _agent.agentParameters.numberOfActionsBetweenDecisions;
         AddVectorObs(_startIdx, len);
     }
     

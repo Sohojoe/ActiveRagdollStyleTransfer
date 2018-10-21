@@ -397,7 +397,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		// }
 		// // AnimationIndex = StartAnimationIndex;
 		
-		AnimationIndex = startIdx;
+		AnimationIndex = startIdx * this._agent.agentParameters.numberOfActionsBetweenDecisions;
 		_phaseIsRunning = true;
 		_isDone = false;
 		var animStep = _muscleAnimator.AnimationSteps[AnimationIndex];
