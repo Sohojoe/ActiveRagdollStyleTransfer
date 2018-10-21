@@ -186,7 +186,9 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 
 		if (!_master.IgnorRewardUntilObservation)
 			AddReward(reward);
-		if (distanceReward < 0.18f && _master.IsInferenceMode == false)
+		// if (distanceReward < 0.18f && _master.IsInferenceMode == false)
+		// 	Done();
+		if (GetStepCount() >= 50 && _master.IsInferenceMode == false)
 			Done();
 		if (!IsDone()){
 			// // if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
@@ -282,7 +284,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 				break;
 			default:
 				// AddReward(-100f);
-				Done();
+				// Done();
 				break;
 			// case BodyHelper002.BodyPartGroup.Hand:
 			// 	// AddReward(-.5f);
