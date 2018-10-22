@@ -26,7 +26,7 @@ LearnFromMocapBrain:
     num_epoch: 3
     beta: 0.01
     time_horizon: 50
-    max_steps: 1e6
+    max_steps: .5e6
     batch_size: 2048
     buffer_size: 10240
     # buffer_size: 20480
@@ -41,4 +41,4 @@ TrainerBrain:
     num_layers: 2
     hidden_units: 64
     # memory_size: 256
-    max_steps: 1e6
+    max_steps: .5e6
