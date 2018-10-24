@@ -347,6 +347,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	{
 		_agent.agentParameters.onDemandDecision = true;
 		_trainerAgent.SetBrainParams(_muscleAnimator.AnimationSteps.Count);
+		_agent.SetTotalAnimFrames(_muscleAnimator.AnimationSteps.Count);
 		_trainerAgent.RequestDecision(_agent.AverageReward);
 	}
 
@@ -398,6 +399,8 @@ public class StyleTransfer002Master : MonoBehaviour {
 		// // AnimationIndex = StartAnimationIndex;
 		
 		AnimationIndex = startIdx * this._agent.agentParameters.numberOfActionsBetweenDecisions;
+		StartAnimationIndex = AnimationIndex;
+		EpisodeAnimationIndex = AnimationIndex;
 		_phaseIsRunning = true;
 		_isDone = false;
 		var animStep = _muscleAnimator.AnimationSteps[AnimationIndex];

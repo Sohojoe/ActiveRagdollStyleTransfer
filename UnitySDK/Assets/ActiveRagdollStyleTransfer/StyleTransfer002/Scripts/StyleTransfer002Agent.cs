@@ -8,6 +8,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 
 	public float FrameReward;
 	public float AverageReward;
+	public List<float> Rewards;
 	public List<float> SensorIsInTouch;
 	StyleTransfer002Master _master;
 	StyleTransfer002Animator _styleAnimator;
@@ -18,6 +19,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	bool _waitingForAnimation;
 
 	static int _startCount;
+	static ScoreHistogramData _scoreHistogramData;
+	int _totalAnimFrames;
 
 	// Use this for initialization
 	void Start () {
@@ -171,6 +174,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 
 		// HACK _startCount used as Monitor does not like reset
         if (ShowMonitor && _startCount < 2) {
+            // Monitor.Log("start frame hist", Rewards.ToArray());
             var hist = new []{
                 reward,
 				distanceReward,
@@ -257,11 +261,15 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		float fractionOfJointsAtLimit = (float)atLimitCount / (float)totalJoints;
 		return fractionOfJointsAtLimit;
 	}
-
-	// public override void AgentOnDone()
-	// {
-
-	// }
+	public void SetTotalAnimFrames(int totalAnimFrames)
+	{
+		_totalAnimFrames = totalAnimFrames;
+		if (_scoreHistogramData == null) {
+			var columns = _totalAnimFrames / agentParameters.numberOfActionsBetweenDecisions;
+			_scoreHistogramData = new ScoreHistogramData(columns, 30);
+		}
+			Rewards = _scoreHistogramData.GetAverages().Select(x=>(float)x).ToList();
+	}
 
 	public override void AgentReset()
 	{
@@ -269,6 +277,10 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			.Select(x=>x.gameObject)
 			.ToList();
 		SensorIsInTouch = Enumerable.Range(0,_sensors.Count).Select(x=>0f).ToList();
+		if (_scoreHistogramData != null) {
+			var column = _master.StartAnimationIndex / agentParameters.numberOfActionsBetweenDecisions;
+             _scoreHistogramData.SetItem(column, AverageReward);
+        }
 		if (!_waitingForAnimation)
 			_master.ResetPhase();
 	}
@@ -294,6 +306,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			default:
 				// AddReward(-100f);
 				Done();
+				// if (_master.IsInferenceMode == false)
+				// 	Done();
 				break;
 			// case BodyHelper002.BodyPartGroup.Hand:
 			// 	// AddReward(-.5f);
