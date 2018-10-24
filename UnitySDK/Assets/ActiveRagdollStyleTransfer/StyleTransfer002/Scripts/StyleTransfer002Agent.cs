@@ -21,6 +21,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	static int _startCount;
 	static ScoreHistogramData _scoreHistogramData;
 	int _totalAnimFrames;
+	bool _ignorScoreForThisFrame;
 
 	// Use this for initialization
 	void Start () {
@@ -35,6 +36,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		if (_waitingForAnimation && _styleAnimator.AnimationStepsReady){
 			_waitingForAnimation = false;
 			_master.ResetPhase();
+			_ignorScoreForThisFrame = true;
 		}
 	}
 
@@ -279,7 +281,10 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		SensorIsInTouch = Enumerable.Range(0,_sensors.Count).Select(x=>0f).ToList();
 		if (_scoreHistogramData != null) {
 			var column = _master.StartAnimationIndex / agentParameters.numberOfActionsBetweenDecisions;
-             _scoreHistogramData.SetItem(column, AverageReward);
+			if (_ignorScoreForThisFrame)
+				_ignorScoreForThisFrame = false;
+			else
+	             _scoreHistogramData.SetItem(column, AverageReward);
         }
 		if (!_waitingForAnimation)
 			_master.ResetPhase();
