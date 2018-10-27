@@ -12,10 +12,13 @@ public class StyleTransfer002TrainerAgent : Agent
 	StyleTransfer002Agent _agent;
 	private Brain _brain;
     int _decisions = 0;
+
+    Academy _academy;
     void Start () {
 		_agent = GetComponent<StyleTransfer002Agent>();
 		_master = GetComponent<StyleTransfer002Master>();
 		_brain = FindObjectsOfType<Brain>().First(x=>x.name=="TrainerBrain");
+        _academy = FindObjectOfType<Academy>();
 	}
 
     void Update () {
@@ -63,4 +66,13 @@ public class StyleTransfer002TrainerAgent : Agent
         _master.SetStartIndex(_startIdx);
     }
 
+    public bool ShouldAgentTerminate(float reward)
+    {
+        // var terminateDistanceRewardCutoff = _academy.resetParameters["terminate_distance_reward_cutoff"];
+        var terminateDistanceRewardCutoff = .333333f;
+        // if (_academy.GetStepCount() > 1000000)
+        //     terminateDistanceRewardCutoff = 0f;
+
+        return reward < terminateDistanceRewardCutoff;
+    }
 }

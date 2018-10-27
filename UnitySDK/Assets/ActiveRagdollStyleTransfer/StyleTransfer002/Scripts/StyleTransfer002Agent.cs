@@ -12,6 +12,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	public List<float> SensorIsInTouch;
 	StyleTransfer002Master _master;
 	StyleTransfer002Animator _styleAnimator;
+	StyleTransfer002TrainerAgent _trainerAgent;
 
 	List<GameObject> _sensors;
 
@@ -27,6 +28,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	void Start () {
 		_master = GetComponent<StyleTransfer002Master>();
 		_styleAnimator = FindObjectOfType<StyleTransfer002Animator>();
+		_trainerAgent = FindObjectOfType<StyleTransfer002TrainerAgent>();
 		_startCount++;
 		_waitingForAnimation = true;
 	}
@@ -195,7 +197,9 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		if (!_master.IgnorRewardUntilObservation)
 			AddReward(reward);
 		// if (distanceReward < 0.18f && _master.IsInferenceMode == false)
-		if (distanceReward < 0.334f && _master.IsInferenceMode == false)
+		// if (distanceReward < 0.334f && _master.IsInferenceMode == false)
+		// if (distanceReward < 0.25f && _master.IsInferenceMode == false)
+		if (_trainerAgent.ShouldAgentTerminate(distanceReward) && _master.IsInferenceMode == false)
 			Done();
 		// if (GetStepCount() >= 50 && _master.IsInferenceMode == false)
 		// 	Done();
@@ -219,7 +223,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			}
 		}
 		FrameReward = reward;
-		AverageReward = GetCumulativeReward() / (float) GetStepCount();
+		var stepCount = GetStepCount() > 0 ? GetStepCount() : 1;
+		AverageReward = GetCumulativeReward() / (float) stepCount;
 	}
 	float GetEffort(string[] ignorJoints = null)
 	{
