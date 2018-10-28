@@ -66,7 +66,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	private StyleTransfer002Animator _muscleAnimator;
 	private StyleTransfer002Agent _agent;
-	private StyleTransfer002TrainerAgent _trainerAgent;
+	// private StyleTransfer002TrainerAgent _trainerAgent;
 	private Brain _brain;
 	public bool IsInferenceMode;
 	bool _phaseIsRunning;
@@ -130,7 +130,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 		}
 		_muscleAnimator = FindObjectOfType<StyleTransfer002Animator>();
 		_agent = GetComponent<StyleTransfer002Agent>();
-		_trainerAgent = GetComponent<StyleTransfer002TrainerAgent>();
+		// _trainerAgent = GetComponent<StyleTransfer002TrainerAgent>();
 		_brain = FindObjectsOfType<Brain>().First(x=>x.name=="LearnFromMocapBrain");
 		switch (_brain.brainType)
 		{
@@ -346,9 +346,10 @@ public class StyleTransfer002Master : MonoBehaviour {
 	public void ResetPhase()
 	{
 		_agent.agentParameters.onDemandDecision = true;
-		_trainerAgent.SetBrainParams(_muscleAnimator.AnimationSteps.Count);
+		// _trainerAgent.SetBrainParams(_muscleAnimator.AnimationSteps.Count);
 		_agent.SetTotalAnimFrames(_muscleAnimator.AnimationSteps.Count);
-		_trainerAgent.RequestDecision(_agent.AverageReward);
+		// _trainerAgent.RequestDecision(_agent.AverageReward);
+		SetStartIndex(0); // HACK for gym
 	}
 
 	public void SetStartIndex(int startIdx)

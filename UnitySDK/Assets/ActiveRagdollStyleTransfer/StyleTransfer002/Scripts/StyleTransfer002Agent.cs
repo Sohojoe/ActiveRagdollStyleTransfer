@@ -12,7 +12,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	public List<float> SensorIsInTouch;
 	StyleTransfer002Master _master;
 	StyleTransfer002Animator _styleAnimator;
-	StyleTransfer002TrainerAgent _trainerAgent;
+	// StyleTransfer002TrainerAgent _trainerAgent;
 
 	List<GameObject> _sensors;
 
@@ -28,7 +28,7 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	void Start () {
 		_master = GetComponent<StyleTransfer002Master>();
 		_styleAnimator = FindObjectOfType<StyleTransfer002Animator>();
-		_trainerAgent = FindObjectOfType<StyleTransfer002TrainerAgent>();
+		// _trainerAgent = FindObjectOfType<StyleTransfer002TrainerAgent>();
 		_startCount++;
 		_waitingForAnimation = true;
 	}
@@ -199,10 +199,11 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		// if (distanceReward < 0.18f && _master.IsInferenceMode == false)
 		// if (distanceReward < 0.334f && _master.IsInferenceMode == false)
 		// if (distanceReward < 0.25f && _master.IsInferenceMode == false)
-		if (_trainerAgent.ShouldAgentTerminate(distanceReward) && _master.IsInferenceMode == false)
-			Done();
+		// if (_trainerAgent.ShouldAgentTerminate(distanceReward) && _master.IsInferenceMode == false)
+			// Done();
 		// if (GetStepCount() >= 50 && _master.IsInferenceMode == false)
-		// 	Done();
+		if (distanceReward < 0.334f && _master.IsInferenceMode == false)
+			Done();
 		if (!IsDone()){
 			// // if (distanceReward < _master.ErrorCutoff && !_master.DebugShowWithOffset) {
 			// if (shouldTerminate && !_master.DebugShowWithOffset) {
