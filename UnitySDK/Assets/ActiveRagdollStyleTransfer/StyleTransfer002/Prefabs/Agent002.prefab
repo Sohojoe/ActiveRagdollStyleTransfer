@@ -2089,12 +2089,13 @@ MonoBehaviour:
   brain: {fileID: 0}
   agentParameters:
     agentCameras: []
-    maxStep: 5000
+    maxStep: 1000
     resetOnDone: 1
     onDemandDecision: 1
-    numberOfActionsBetweenDecisions: 5
+    numberOfActionsBetweenDecisions: 1
   FrameReward: 0
   AverageReward: 0
+  Rewards: []
   SensorIsInTouch: []
   ShowMonitor: 0
 --- !u!114 &114531400407079678

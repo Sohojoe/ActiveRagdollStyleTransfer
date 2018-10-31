@@ -97,6 +97,12 @@ namespace MLAgents
         // Fields provided in the Inspector
 
         [SerializeField]
+        [Tooltip("The number of physics only steps per FixedUpdate. \nDefault value is 0\n" +
+                 "This enables a more performant way to run physics at high frequencies\n" +
+                 "without the need to call an action step with each update.")]
+        int physicsOnlySteps;
+
+        [SerializeField]
         [Tooltip("Total number of steps per global episode.\nNon-positive " +
                  "values correspond to episodes without a maximum number of \n" +
                  "steps. Once the step counter reaches this maximum value, the " +
@@ -180,6 +186,9 @@ namespace MLAgents
         /// The path to where the log should be written.
         string logPath;
 
+        /// When physicsOnlySteps is greater than 0, this tracks the current step
+        int physicsStep;
+        bool isPhysicsOnlyFixedUpdateStep;
 
         // Flag used to keep track of the first time the Academy is reset.
         bool firstAcademyReset;
@@ -422,6 +431,7 @@ namespace MLAgents
         /// </summary>
         public virtual void AcademyReset()
         {
+            physicsStep = 0;
         }
 
         /// <summary>
@@ -506,6 +516,17 @@ namespace MLAgents
         public bool IsCommunicatorOn()
         {
             return isCommunicatorOn;
+        }
+
+        /// <summary>
+        /// Returns true if this FixedUpdate is only for physics
+        /// </summary>
+        /// <returns>
+        /// <c>true</c>, if physics only FixedUpdate step, <c>false</c> otherwise.
+        /// </returns>
+        public bool GetIsPhysicsOnlyFixedUpdateStep()
+        {
+            return isPhysicsOnlyFixedUpdateStep;
         }
 
         /// <summary>
@@ -607,6 +628,12 @@ namespace MLAgents
         /// </summary>
         void FixedUpdate()
         {
+            isPhysicsOnlyFixedUpdateStep = physicsStep != 0;
+            physicsStep++;
+            if (physicsStep > physicsOnlySteps)
+                physicsStep = 0;
+            if (isPhysicsOnlyFixedUpdateStep)
+                return;
             EnvironmentStep();
         }
 

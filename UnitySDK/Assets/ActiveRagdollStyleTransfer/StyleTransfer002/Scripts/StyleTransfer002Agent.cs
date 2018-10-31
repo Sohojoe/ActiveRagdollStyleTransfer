@@ -17,7 +17,6 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 	List<GameObject> _sensors;
 
 	public bool ShowMonitor = false;
-	bool _waitingForAnimation;
 
 	static int _startCount;
 	static ScoreHistogramData _scoreHistogramData;
@@ -30,16 +29,10 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 		_styleAnimator = FindObjectOfType<StyleTransfer002Animator>();
 		// _trainerAgent = FindObjectOfType<StyleTransfer002TrainerAgent>();
 		_startCount++;
-		_waitingForAnimation = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (_waitingForAnimation && _styleAnimator.AnimationStepsReady){
-			_waitingForAnimation = false;
-			_master.ResetPhase();
-			_ignorScoreForThisFrame = true;
-		}
 	}
 
 	override public void InitializeAgent()
@@ -281,6 +274,8 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 
 	public override void AgentReset()
 	{
+		_ignorScoreForThisFrame = true;
+		_master.ResetPhase();
 		_sensors = GetComponentsInChildren<SensorBehavior>()
 			.Select(x=>x.gameObject)
 			.ToList();
@@ -292,8 +287,6 @@ public class StyleTransfer002Agent : Agent, IOnSensorCollision, IOnTerrainCollis
 			else
 	             _scoreHistogramData.SetItem(column, AverageReward);
         }
-		if (!_waitingForAnimation)
-			_master.ResetPhase();
 	}
 	public virtual void OnTerrainCollision(GameObject other, GameObject terrain)
 	{

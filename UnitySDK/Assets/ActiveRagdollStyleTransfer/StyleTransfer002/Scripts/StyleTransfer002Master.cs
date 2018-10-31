@@ -60,12 +60,15 @@ public class StyleTransfer002Master : MonoBehaviour {
 	private bool _isDone;
 	bool _resetCenterOfMassOnLastUpdate;
 	bool _fakeVelocity;
+	bool _waitingForAnimation;
 
 
 	// public List<float> vector;
 
 	private StyleTransfer002Animator _muscleAnimator;
 	private StyleTransfer002Agent _agent;
+	private Academy _academy;
+	StyleTransfer002Animator _styleAnimator;
 	// private StyleTransfer002TrainerAgent _trainerAgent;
 	private Brain _brain;
 	public bool IsInferenceMode;
@@ -83,6 +86,7 @@ public class StyleTransfer002Master : MonoBehaviour {
 	}
 	void Start () {
 		Time.fixedDeltaTime = FixedDeltaTime;
+		_waitingForAnimation = true;
 
 		BodyParts = new List<BodyPart002> ();
 		BodyPart002 root = null;
@@ -132,6 +136,8 @@ public class StyleTransfer002Master : MonoBehaviour {
 		_agent = GetComponent<StyleTransfer002Agent>();
 		// _trainerAgent = GetComponent<StyleTransfer002TrainerAgent>();
 		_brain = FindObjectsOfType<Brain>().First(x=>x.name=="LearnFromMocapBrain");
+		_academy = FindObjectOfType<Academy>();
+		_styleAnimator = FindObjectOfType<StyleTransfer002Animator>();
 		switch (_brain.brainType)
 		{
 			case BrainType.External:
@@ -167,6 +173,17 @@ public class StyleTransfer002Master : MonoBehaviour {
 	}
 
 	void FixedUpdate()
+	{
+		if (_academy.GetIsPhysicsOnlyFixedUpdateStep())
+			return;
+		if (_waitingForAnimation && _styleAnimator.AnimationStepsReady){
+			_waitingForAnimation = false;
+			ResetPhase();
+		}
+		var animStep = UpdateObservations();
+		Step(animStep);
+	}
+	StyleTransfer002Animator.AnimationStep UpdateObservations()
 	{
 		if (DebugMode)
 			AnimationIndex = 0;
@@ -267,7 +284,11 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 		if (IgnorRewardUntilObservation)
 			IgnorRewardUntilObservation = false;
-
+		ObsPhase = _muscleAnimator.AnimationSteps[AnimationIndex].NormalizedTime % 1f;
+		return animStep;
+	}
+	void Step(StyleTransfer002Animator.AnimationStep animStep)
+	{
 		if (_phaseIsRunning){
 			if (!DebugShowWithOffset)
 				AnimationIndex++;
@@ -276,7 +297,6 @@ public class StyleTransfer002Master : MonoBehaviour {
 				Done();
 				AnimationIndex--;
 			}
-			ObsPhase = _muscleAnimator.AnimationSteps[AnimationIndex].NormalizedTime % 1f;
 		}
 		if (_phaseIsRunning && IsInferenceMode && CameraFollowMe)
 		{
@@ -345,11 +365,14 @@ public class StyleTransfer002Master : MonoBehaviour {
 
 	public void ResetPhase()
 	{
+		if (_waitingForAnimation)
+			return;
 		_agent.agentParameters.onDemandDecision = true;
 		// _trainerAgent.SetBrainParams(_muscleAnimator.AnimationSteps.Count);
 		_agent.SetTotalAnimFrames(_muscleAnimator.AnimationSteps.Count);
 		// _trainerAgent.RequestDecision(_agent.AverageReward);
 		SetStartIndex(0); // HACK for gym
+		UpdateObservations();
 	}
 
 	public void SetStartIndex(int startIdx)
