@@ -28,32 +28,36 @@ Research into using mocap (and longer term video) as style reference for trainin
 
 ----
 
-## StyleTransfer002 (In-Progress)
+## StyleTransfer002
 
-Running (002.114) |
+Backflip (002.114-128m steps) |
 --- | 
-![StyleTransfer002.114](images/StyleTransfer002.114-running-32m.gif) | 
+![StyleTransfer002.128](images/StyleTransfer002.144-backflip-128m.gif) | 
 
-Walking (002.113) | Backflip (002.115) |
+| Running (002.114) | Walking (002.113) | 
 --- | ---- |
-![StyleTransfer002.113](images/StyleTransfer002.113-walking-32m.gif) | ![StyleTransfer002.115](images/StyleTransfer002.115-backflip-48m.gif) 
+![StyleTransfer002.114](images/StyleTransfer002.114-running-32m.gif) | ![StyleTransfer002.113](images/StyleTransfer002.113-walking-32m.gif) | 
 
 * **Model:** MarathonMan (modified MarathonEnv.DeepMindHumanoid)
 * **Animation:** Runningv2, Walking, Backflip
 * **Hypostheis:** Implement basic style transfer from mo-cap using MarathonEnv model
-* **Outcome:** Starting to work... needs more training
+* **Outcome:** Is now training on Backflip
   * Initial was able to train walking but not running (16m steps / 3.2m observations)
   * Through tweaking model was able to train running (32m steps / 6.4m observations)
-  * Still struggling to train backflip but looks like I need to train for longer (current example is 48m steps / 9.6m observations)
+  * Was struggling to train backflip but looks like I need to train for longer (current example is 48m steps / 9.6m observations)
+  * Was able to train Backflip after updating to Unity 2018.3 beta - looks like updates to PhyX engine improve stability
 * **References:** 
   * Insperation: [DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills arXiv:1804.02717 [cs.GR]](https://arxiv.org/abs/1804.02717 
-* **Raw Notes:**
-  * step = 1 physics step (200 fps)
-  * observation = 1 training observation (40 fps)
+* **Notes:**
   * Needed to make lots of modifications to model to improve training performance
   * Added sensors to feet improved trainging
   * Tweaking joints improved training
-  * Training time = ~7h for 16m steps (3.2m observations)
+  * Training time was = ~7h for 16m steps (3.2m observations) **TODO: check assumptions**
+  * New Training time is + 2x
+  * ... Optimization: Hack to Academy to have 4 physics only steps per ml-step
+  * ... Optimization: Train with 64 agents
+  * ... also found training in headless mode --no-graphics helped
+  * **Updated to Unity 2018.3 Beta for PhysX improvements** 
   * see [RawNotes.002](RawNotes.002.md) for details on each experiment
 
 

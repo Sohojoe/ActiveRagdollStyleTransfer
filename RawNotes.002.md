@@ -1,5 +1,58 @@
 These are my raw notes from each training run
 
+* 002.143 - backflip (StyleTransfer002) - **Finally completes backflip!!! needed 128m training steps**
+
+| Reward | EpisodeLenght | ValueLoss |
+|--|--|--|
+| ![Reward](images/StyleTransfer002.144-backflip-128m-Reward.png) |  ![EpisodeLenght](images/StyleTransfer002.144-backflip-128m-EpisodeLenght.png) |  ![ValueLoss](images/StyleTransfer002.144-backflip-128m-ValueLoss.png) | 
+Trained with 64 agents (so 128m training steps)
+Trained in 3 phases. 1 was 32m, then 32m, then 64m
+
+* … **test using Unity 2018.3 beta using my default hyperparms**
+* 002.142 - gamma: 0.995 (was .99)
+* 002.142 - gamma: 0.98 (was .99) - seams closer to 
+* 002.141 - trained almost as good as 
+* … by mistake, buffer_size: 4096, batch_size: 1024
+* … optimize by only running action / any ml-agents logic 1 in 5 times
+* Tried OpenAI Baselines PPO2 but did not figure out right hyperparams or see improvement in training time. Found GPU was slower than CPU???
+* Tried  hidden_units: 1024 (was 512) - didn’t show any improvement
+* 002.138 - backflip (StyleTransfer002) 
+* … curriculum learning 50% at .8, then 0.0
+* 002.137 - backflip (StyleTransfer002) start frame 0,  =
+* … hidden_units: 1024 (was 512)
+        * … time_horizon: 100 (was 50) 
+* 002.136 - backflip (StyleTransfer002) start frame 0 = 
+* … abort if distanceReward < 0.25f (was 0.33)
+* 002.135 - backflip (StyleTransfer002) with random trainer = 32m - so so, better than 133 but not as good as 134; will keep training both
+* 002.134 - backflip (StyleTransfer002) start frame 1 = 32m - **is working best so far**
+* … abort if distanceReward < 0.334f (was 0.18f)
+* 002.133 - backflip (StyleTransfer002) with random trainer = aborts out of backflip, try more aggressive distanceReward abort
+* 002.132 - runningv2 (StyleTransfer002) with random trainer  = trains well after 32m sim steps, train for more
+* … revert early terminate during training after 50 steps
+* … reset if reward < 0.18 or torso, head, bum hit ground
+* 002.130 = backflip (StyleTransfer002) with random trainer = not great, seams really wobbly, not sure the 50 steps thing is working out so well
+* … StyleTransfer002TrainerAgent ignores skipped frames (so backflip goes from 430 to 83 frames)
+* … time_horizon: 50 (was 1000)
+* … turn jointAtLimitPenality into jointsNotAtLimitReward 
+* 002.129 = backflip (StyleTransfer002e) normal batch size = hard to tell
+* 002.128 = backflip (StyleTransfer002f) 1/4 batch size = doesn’t do well
+* .. 64 agents
+* 002.127 = backflip (StyleTransfer002e) with random trainer = 
+* 002.126 = backflip (StyleTransfer002f) = not sure
+* … early terminate during training after 50 steps
+* 002.125 = backflip (StyleTransfer002e) = not sure
+* … reset if reward < 0.18
+* 002.124 = backflip (StyleTransfer002f) )
+* … trainerAgent does not reset on done = Same, takes easy way out of backflip
+* 002.122 = backflip (StyleTransfer002e) ) = OK, but takes easy way out of backflip so that he stands for longer
+* … rework reward so never negative 
+* 002.121 = backflip (StyleTransfer002e) (minor tweak) = is learning to fail as this is higher reward than negatives
+* 002.120 = backflip (StyleTransfer002e) = NOT WORKING 
+* … TrainerBrain - Adversarial network to choose where to focus training
+* 002.119 = jazzDance (StyleTransfer002d) = 
+* 002.118 = MMAKick (StyleTransfer002b) = 
+* 002.117 = backflip (StyleTransfer002a) = 
+* … remove clip on reward
 * 002.116 = backflip (StyleTransfer002d) -1 on fail (was -100) = TBD
 * 002.115 = backflip (StyleTransfer002c) = TBD needs more training steps
 * 002.114 = runningv2 (StyleTransfer002b) = **Trains well**
