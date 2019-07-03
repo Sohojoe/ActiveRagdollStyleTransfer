@@ -55,6 +55,7 @@ public class Muscle002
 
     public void UpdateMotor()
     {
+        float powerMultiplier = 20f;
 		var t = ConfigurableJoint.targetAngularVelocity;
 		t.x = TargetNormalizedRotationX * MaximumForce.x;
 		t.y = TargetNormalizedRotationY * MaximumForce.y;
@@ -65,7 +66,7 @@ public class Muscle002
 		angX.positionSpring = 1f;
 		var scale = MaximumForce.x * Mathf.Pow(Mathf.Abs(TargetNormalizedRotationX), 3);
 		angX.positionDamper = Mathf.Max(1f, scale);
-		angX.maximumForce = Mathf.Max(1f, MaximumForce.x);
+		angX.maximumForce = Mathf.Max(1f, MaximumForce.x * powerMultiplier);
 		ConfigurableJoint.angularXDrive = angX;
 
         var maxForce = Mathf.Max(MaximumForce.y + MaximumForce.z);
@@ -74,7 +75,7 @@ public class Muscle002
         var maxAbsRotXY = Mathf.Max(Mathf.Abs(TargetNormalizedRotationY) + Mathf.Abs(TargetNormalizedRotationZ));
 		scale = maxForce * Mathf.Pow(maxAbsRotXY, 3);
 		angYZ.positionDamper = Mathf.Max(1f, scale);
-		angYZ.maximumForce = Mathf.Max(1f, maxForce);
+		angYZ.maximumForce = Mathf.Max(1f, maxForce * powerMultiplier);
 		ConfigurableJoint.angularYZDrive = angYZ;
 	}    
 
