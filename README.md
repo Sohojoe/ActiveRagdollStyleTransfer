@@ -12,7 +12,7 @@ Research into using mocap (and longer term video) as style reference for trainin
 ----
 
 #### Using this repro
-* Make sure you are using a compatable version of Unity (tested with 2018.4 LTS)
+* Make sure you are using a compatable version of Unity (tested with 2018.4 LTS and 2019.1)
 * To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md) 
 * To try different moves: Replace reference MoCap in animation tree and select the right ML-Agent trained model
 * See the [ML-Agents documentation](https://github.com/Unity-Technologies/ml-agents) for how to train
@@ -48,7 +48,7 @@ Backflip (002.144-128m steps) |
   * Was struggling to train backflip but looks like I need to train for longer (current example is 48m steps / 9.6m observations)
   * Was able to train Backflip after updating to Unity 2018.3 beta - looks like updates to PhyX engine improve stability
 * **References:** 
-  * Insperation: [DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills arXiv:1804.02717 [cs.GR]](https://arxiv.org/abs/1804.02717 
+  * Insperation: [DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills arXiv:1804.02717 [cs.GR]](https://arxiv.org/abs/1804.02717)
 * **Notes:**
   * Needed to make lots of modifications to model to improve training performance
   * Added sensors to feet improved trainging
