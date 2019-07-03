@@ -12,6 +12,7 @@ Research into using mocap (and longer term video) as style reference for trainin
 ----
 
 #### Using this repro
+* Make sure you are using a compatable version of Unity (tested with 2018.4 LTS)
 * To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md) 
 * To try different moves: Replace reference MoCap in animation tree and select the right ML-Agent trained model
 * See the [ML-Agents documentation](https://github.com/Unity-Technologies/ml-agents) for how to train
@@ -30,7 +31,7 @@ Research into using mocap (and longer term video) as style reference for trainin
 
 ## StyleTransfer002
 
-Backflip (002.114-128m steps) |
+Backflip (002.144-128m steps) |
 --- | 
 ![StyleTransfer002.128](images/StyleTransfer002.144-backflip-128m.gif) | 
 
