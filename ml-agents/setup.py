@@ -14,7 +14,8 @@ setup(
     description='Unity Machine Learning Agents',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/Unity-Technologies/ml-agents',
+    #url='https://github.com/Unity-Technologies/ml-agents',
+	url='https://github.com/Unity-Technologies/ml-agents/commit/d6dad11c773a8598540a8896d0d48b2489b222ae',
     author='Unity Technologies',
     author_email='ML-Agents@unity3d.com',
 

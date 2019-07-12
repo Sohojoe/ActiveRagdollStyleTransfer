@@ -21,11 +21,22 @@ The `mlagents` Python package contains two sub packages:
 
 ## Installation
 
-Install the `mlagents` package with:
+you cannot install the `mlagents` package in the traditional way, i.e.:
 
 ```sh
 pip install mlagents
 ```
+
+The reason for this is that this will install mlagents in version 0.8, and this project uses mlagents version 0.5
+To circumvent this, enter in the ml-agents folder (where there is setup.py) and docs/Python-API
+
+
+```sh
+pip install -e .
+```
+
+This is enough to fix the version running (notice how the setup.py does not point to a generic commit, but rather to the specifici 0.5 version).
+
 
 ## Usage & More Information
 

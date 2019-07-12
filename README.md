@@ -11,15 +11,19 @@ Research into using mocap (and longer term video) as style reference for trainin
 
 ----
 
-#### Using this repro
-* Make sure you are using a compatable version of Unity (tested with 2018.4 LTS and 2019.1)
-* To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md) 
+#### Using this repo
+* To install, check the instructions in the folder ml-agents/Readme.md
+* Make sure you are using a compatible version of Unity (last tested with 2019.1)
+* To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md). 
+The package can be downloaded from [this link](https://s3.amazonaws.com/unity-ml-agents/0.5/TFSharpPlugin.unitypackage)
+
 * To try different moves: Replace reference MoCap in animation tree and select the right ML-Agent trained model
 * To re-train:
   * Set the `LearnFromMocapBrain` to External ![SetBrainType.png](images/SetBrainType.png)
   * Build the project
   * From the root path, invoke the python script like this: `mlagents-learn config\style_transfer_config.yaml --train --env="\b\StyleTransfer002\Unity Environment.exe"  --run-id=StyleTransfer002-145` where `"\b\StyleTransfer002\Unity Environment.exe"` points to the built project and `StyleTransfer002-145` is the unique name for this run. (Note: use `/` if on MacOS/Linux)
   * See the [ML-Agents documentation](https://github.com/Unity-Technologies/ml-agents) for more details on using ML-Agents
+* Notice the walker and the runner are trained with an older version of Unity, so they will not work straight away in Unity 2019.1, mainly due to the fact that PhysX has changed. Retraining these should work, though
 
 * Post an Issue if you are still stuck
 
@@ -29,6 +33,7 @@ Research into using mocap (and longer term video) as style reference for trainin
 * Joe Booth ([SohoJoe](https://github.com/Sohojoe))
 
 ----
+
 
 #### Download builds : [Releases](https://github.com/Sohojoe/ActiveRagdollStyleTransfer/releases/)
 
