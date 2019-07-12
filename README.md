@@ -13,7 +13,9 @@ Research into using mocap (and longer term video) as style reference for trainin
 
 #### Using this repro
 * Make sure you are using a compatable version of Unity (tested with 2018.4 LTS and 2019.1)
-* To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md) 
+* To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md). 
+The package can be downloaded from [this link](https://s3.amazonaws.com/unity-ml-agents/0.5/TFSharpPlugin.unitypackage)
+
 * To try different moves: Replace reference MoCap in animation tree and select the right ML-Agent trained model
 * To re-train:
   * Set the `LearnFromMocapBrain` to External ![SetBrainType.png](images/SetBrainType.png)
@@ -29,6 +31,7 @@ Research into using mocap (and longer term video) as style reference for trainin
 * Joe Booth ([SohoJoe](https://github.com/Sohojoe))
 
 ----
+
 
 #### Download builds : [Releases](https://github.com/Sohojoe/ActiveRagdollStyleTransfer/releases/)
 
