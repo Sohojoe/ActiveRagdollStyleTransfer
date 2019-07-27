@@ -55,7 +55,7 @@ public class Muscle002
 
     public void UpdateMotor()
     {
-        float powerMultiplier = 20f;
+        float powerMultiplier = 2.5f;
 		var t = ConfigurableJoint.targetAngularVelocity;
 		t.x = TargetNormalizedRotationX * MaximumForce.x;
 		t.y = TargetNormalizedRotationY * MaximumForce.y;
