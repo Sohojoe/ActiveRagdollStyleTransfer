@@ -16,6 +16,11 @@ Research into using mocap (and longer term video) as style reference for trainin
 * To run trained models, make sure you: [add TensorFlowSharp to Unity](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Using-TensorFlow-Sharp-in-Unity.md) 
 * To try different moves: Replace reference MoCap in animation tree and select the right ML-Agent trained model
 * To re-train:
+
+  * Make sure you've installed ml-agents of this project before by
+``sh
+pip install .
+```
   * Set the `LearnFromMocapBrain` to External ![SetBrainType.png](images/SetBrainType.png)
   * Build the project
   * From the root path, invoke the python script like this: `mlagents-learn config\style_transfer_config.yaml --train --env="\b\StyleTransfer002\Unity Environment.exe"  --run-id=StyleTransfer002-145` where `"\b\StyleTransfer002\Unity Environment.exe"` points to the built project and `StyleTransfer002-145` is the unique name for this run. (Note: use `/` if on MacOS/Linux)
