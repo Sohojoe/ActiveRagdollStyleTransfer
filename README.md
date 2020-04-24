@@ -18,7 +18,7 @@ Research into using mocap (and longer term video) as style reference for trainin
 * To re-train:
 
   * Make sure you've installed ml-agents of this project before by
-``sh
+```sh
 pip install .
 ```
   * Set the `LearnFromMocapBrain` to External ![SetBrainType.png](images/SetBrainType.png)
