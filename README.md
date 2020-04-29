@@ -1,3 +1,7 @@
+**NOTE** This project has now been integrated with [MarathonEnvs](https://github.com/Unity-Technologies/marathon-envs). Please go there if you have any questions.
+
+----
+
 # ActiveRagdollStyleTransfer
 Research into using mocap (and longer term video) as style reference for training Active Ragdolls / locomotion for Video Games
 
