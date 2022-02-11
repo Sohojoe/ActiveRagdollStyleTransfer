@@ -36,7 +36,7 @@ setup(
         'pytest>=3.2.2',
         'docopt',
         'pyyaml',
-        'protobuf>=3.6,<3.7',
+        'protobuf>=3.6,<3.16',
         'grpcio>=1.11.0,<1.12.0'],
 
     python_requires=">=3.6,<3.7",
